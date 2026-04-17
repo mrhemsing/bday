@@ -1,6 +1,60 @@
 import { cache } from 'react';
 import type { Generation, Person } from './types';
+import { hasSupabaseEnv } from './env';
 import { createSupabaseAdminClient } from './supabase/server';
+
+const samplePeople: Person[] = [
+  {
+    id: 'sample-evelyn-hemsing',
+    full_name: 'Evelyn Hemsing',
+    birth_date: '1952-02-14',
+    generation: 'other',
+    notes: 'Family matriarch',
+    active: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 'sample-caleb-hemsing',
+    full_name: 'Caleb Hemsing',
+    birth_date: '1984-06-02',
+    generation: 'other',
+    notes: 'Loves hosting the summer cookout',
+    active: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 'sample-mara-hemsing',
+    full_name: 'Mara Hemsing',
+    birth_date: '2012-04-18',
+    generation: 'child',
+    notes: 'Prefers strawberry cake',
+    active: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 'sample-owen-hemsing',
+    full_name: 'Owen Hemsing',
+    birth_date: '2016-11-09',
+    generation: 'grandchild',
+    notes: null,
+    active: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 'sample-ivy-hemsing',
+    full_name: 'Ivy Hemsing',
+    birth_date: '2021-12-28',
+    generation: 'great-grandchild',
+    notes: 'Usually celebrates with pancakes',
+    active: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+];
 
 export interface PersonInput {
   full_name: string;
@@ -11,6 +65,13 @@ export interface PersonInput {
 }
 
 export const getPeople = cache(async (options?: { includeInactive?: boolean; query?: string }) => {
+  if (!hasSupabaseEnv()) {
+    return samplePeople
+      .filter((person) => options?.includeInactive || person.active)
+      .filter((person) => !options?.query || person.full_name.toLowerCase().includes(options.query.toLowerCase()))
+      .sort((a, b) => a.birth_date.localeCompare(b.birth_date));
+  }
+
   const supabase = createSupabaseAdminClient();
   let query = supabase.from('people').select('*').order('birth_date', { ascending: true });
 
@@ -32,6 +93,12 @@ export const getPeople = cache(async (options?: { includeInactive?: boolean; que
 });
 
 export async function getPersonById(id: string) {
+  if (!hasSupabaseEnv()) {
+    const person = samplePeople.find((entry) => entry.id === id);
+    if (!person) throw new Error('Person not found.');
+    return person;
+  }
+
   const supabase = createSupabaseAdminClient();
   const { data, error } = await supabase.from('people').select('*').eq('id', id).single();
 
@@ -43,6 +110,10 @@ export async function getPersonById(id: string) {
 }
 
 export async function createPerson(input: PersonInput) {
+  if (!hasSupabaseEnv()) {
+    throw new Error('Supabase environment variables are required before creating records.');
+  }
+
   const supabase = createSupabaseAdminClient();
   const payload = {
     full_name: input.full_name.trim(),
@@ -57,6 +128,10 @@ export async function createPerson(input: PersonInput) {
 }
 
 export async function updatePerson(id: string, input: PersonInput) {
+  if (!hasSupabaseEnv()) {
+    throw new Error('Supabase environment variables are required before updating records.');
+  }
+
   const supabase = createSupabaseAdminClient();
   const payload = {
     full_name: input.full_name.trim(),
@@ -71,12 +146,20 @@ export async function updatePerson(id: string, input: PersonInput) {
 }
 
 export async function archivePerson(id: string) {
+  if (!hasSupabaseEnv()) {
+    throw new Error('Supabase environment variables are required before archiving records.');
+  }
+
   const supabase = createSupabaseAdminClient();
   const { error } = await supabase.from('people').update({ active: false }).eq('id', id);
   if (error) throw new Error(error.message);
 }
 
 export async function deletePerson(id: string) {
+  if (!hasSupabaseEnv()) {
+    throw new Error('Supabase environment variables are required before deleting records.');
+  }
+
   const supabase = createSupabaseAdminClient();
   const { error } = await supabase.from('people').delete().eq('id', id);
   if (error) throw new Error(error.message);
