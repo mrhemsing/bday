@@ -79,6 +79,28 @@ Deploy to Vercel or another Next.js host.
 
 Set the same environment variables in your deployment platform, then connect the project to your Supabase instance.
 
+### Vercel checklist
+
+1. Push the `bday` project to GitHub.
+2. Import the repo into Vercel.
+3. Set the Root Directory to `bday` if this workspace is part of a larger repo.
+4. Add these environment variables in Vercel for Production and Preview:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `ADMIN_EMAIL`
+   - `ADMIN_PASSWORD`
+5. Redeploy after adding env vars.
+6. In Supabase, create an email/password auth user matching `ADMIN_EMAIL`.
+7. Run the SQL migration and optional seed before the first production login.
+
+### Build output
+
+- Framework preset: Next.js
+- Build command: `npm run build`
+- Install command: `npm install`
+- Output setting: default Next.js output
+
 ## Notes on auth
 
 Phase 1 keeps auth intentionally lightweight:

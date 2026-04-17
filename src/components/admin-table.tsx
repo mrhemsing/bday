@@ -22,12 +22,12 @@ export function AdminTable({ people }: { people: Person[] }) {
             </thead>
             <tbody className="divide-y divide-slate-100 bg-white/70 text-sm text-slate-700">
               {people.map((person) => (
-                <tr key={person.id}>
+                <tr key={person.id} className="align-top transition hover:bg-slate-50/70">
                   <td className="px-6 py-4">
                     <div className="font-medium text-slate-900">{person.full_name}</div>
-                    {person.notes ? <div className="mt-1 text-slate-500">{person.notes}</div> : null}
+                    {person.notes ? <div className="mt-1 max-w-md text-slate-500">{person.notes}</div> : null}
                   </td>
-                  <td className="px-6 py-4">{formatBirthday(person.birth_date)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{formatBirthday(person.birth_date)}</td>
                   <td className="px-6 py-4 capitalize">{person.generation}</td>
                   <td className="px-6 py-4">
                     <span className={`rounded-full px-3 py-1 text-xs font-semibold ${person.active ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
