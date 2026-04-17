@@ -1,0 +1,29 @@
+function required(name: string) {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value;
+}
+
+export const env = {
+  supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
+  supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '',
+  supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? '',
+  adminEmail: process.env.ADMIN_EMAIL ?? '',
+  adminPassword: process.env.ADMIN_PASSWORD ?? '',
+};
+
+export function getSupabasePublicEnv() {
+  return {
+    url: required('NEXT_PUBLIC_SUPABASE_URL'),
+    anonKey: required('NEXT_PUBLIC_SUPABASE_ANON_KEY'),
+  };
+}
+
+export function getSupabaseServiceEnv() {
+  return {
+    url: required('NEXT_PUBLIC_SUPABASE_URL'),
+    serviceRoleKey: required('SUPABASE_SERVICE_ROLE_KEY'),
+  };
+}
