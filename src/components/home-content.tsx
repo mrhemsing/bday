@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { BirthdayList } from '@/components/birthday-list';
 import { SurfaceCard } from '@/components/cards';
 import { formatMonthDay, getMonthName } from '@/lib/birthdays';
@@ -63,6 +63,31 @@ export function HomeContent({
     startXRef.current = null;
     startYRef.current = null;
   }
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      const target = event.target;
+      if (target instanceof HTMLElement) {
+        const tagName = target.tagName.toLowerCase();
+        if (target.isContentEditable || ['input', 'textarea', 'select', 'button'].includes(tagName)) {
+          return;
+        }
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        moveMonth(-1);
+      }
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        moveMonth(1);
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
     <div
