@@ -47,6 +47,40 @@ textarea {
   font: inherit;
 }
 
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 ::selection {
   background: rgba(124, 58, 237, 0.18);
+}
+
+.wheel-frame {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 0 rgba(148, 163, 184, 0.12);
+}
+
+.wheel-fade-top {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0));
+}
+
+.wheel-fade-bottom {
+  background: linear-gradient(to top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0));
+}
+
+.wheel-option {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.wheel-option.is-selected {
+  font-size: 1.125rem;
+  font-weight: 600;
 }

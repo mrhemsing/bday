@@ -8,9 +8,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-5 lg:flex-row lg:items-center lg:justify-between lg:px-8">
           <div>
             <Link href="/" className="text-lg font-semibold tracking-tight text-slate-900">
-              Hemsing Birthday Tracker
+              Hemsing Family Birthday Calendar
             </Link>
-            <p className="mt-1 text-sm text-slate-500">A calm, polished place to keep family birthdays close.</p>
+            <p className="mt-1 text-sm text-slate-500">Because 22 kids turns into a lot of cake! 🎂</p>
           </div>
           <nav className="flex w-full items-center gap-2 rounded-full border border-slate-200 bg-white/90 p-1 text-sm text-slate-600 shadow-sm lg:w-auto">
             <NavLink href="/">Upcoming</NavLink>
@@ -18,7 +18,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </nav>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-6 py-10 lg:px-8">{children}</main>
+      <main className="mx-auto max-w-6xl px-6 py-6 lg:px-8">{children}</main>
     </div>
   );
 }

@@ -17,10 +17,10 @@ export default async function HomePage() {
           <div className="max-w-2xl">
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-violet-600">Upcoming family birthdays</p>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
-              Keep every Hemsing birthday easy to see.
+              Hemsing Family Birthday Calendar
             </h1>
             <p className="mt-4 text-base leading-8 text-slate-600 sm:text-lg">
-              A clean family dashboard for today, this week, and this month, with ages and generations ready at a glance.
+              Because 22 kids turns into a lot of cake! 🎂 Keep every birthday easy to see, with today, this week, and this month all at a glance.
             </p>
 
             {nextUp ? (

@@ -11,18 +11,12 @@ function readString(formData: FormData, key: string) {
   return String(formData.get(key) ?? '').trim();
 }
 
-function readBoolean(formData: FormData, key: string) {
-  return formData.get(key) === 'on';
-}
-
 function validatePersonForm(formData: FormData) {
   const full_name = readString(formData, 'full_name');
   const birthYear = readString(formData, 'birth_year');
   const birthMonth = readString(formData, 'birth_month');
   const birthDay = readString(formData, 'birth_day');
   const generation = readString(formData, 'generation') as Generation;
-  const notes = readString(formData, 'notes');
-  const active = readBoolean(formData, 'active');
 
   if (!full_name) throw new Error('Please enter a full name.');
   if (!birthYear || !birthMonth || !birthDay) throw new Error('Please choose a complete birth date.');
@@ -32,7 +26,7 @@ function validatePersonForm(formData: FormData) {
   const parsed = new Date(`${birth_date}T00:00:00`);
   if (Number.isNaN(parsed.getTime())) throw new Error('Please choose a valid birth date.');
 
-  return { full_name, birth_date, generation, notes, active };
+  return { full_name, birth_date, generation, active: true };
 }
 
 export async function createPersonAction(formData: FormData) {

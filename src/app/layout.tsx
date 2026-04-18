@@ -13,8 +13,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Hemsing Birthday Tracker',
-  description: 'A simple family birthday tracker for upcoming Hemsing birthdays.',
+  title: 'Hemsing Family Birthday Calendar',
+  description: 'Because 22 kids turns into a lot of cake!',
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+      'max-snippet': -1,
+      'max-image-preview': 'none',
+      'max-video-preview': -1,
+    },
+  },
 };
 
 export default function RootLayout({

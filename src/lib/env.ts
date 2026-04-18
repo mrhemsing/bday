@@ -16,6 +16,7 @@ export const env = {
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? '',
   adminEmail: process.env.ADMIN_EMAIL ?? '',
   adminPassword: process.env.ADMIN_PASSWORD ?? '',
+  adminUsername: process.env.ADMIN_USERNAME ?? 'admin',
 };
 
 export function getSupabasePublicEnv() {

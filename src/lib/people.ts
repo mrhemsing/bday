@@ -60,7 +60,6 @@ export interface PersonInput {
   full_name: string;
   birth_date: string;
   generation: Generation;
-  notes?: string;
   active?: boolean;
 }
 
@@ -69,11 +68,11 @@ export const getPeople = cache(async (options?: { includeInactive?: boolean; que
     return samplePeople
       .filter((person) => options?.includeInactive || person.active)
       .filter((person) => !options?.query || person.full_name.toLowerCase().includes(options.query.toLowerCase()))
-      .sort((a, b) => a.birth_date.localeCompare(b.birth_date));
+      .sort((a, b) => a.full_name.localeCompare(b.full_name));
   }
 
   const supabase = createSupabaseAdminClient();
-  let query = supabase.from('people').select('*').order('birth_date', { ascending: true });
+  let query = supabase.from('people').select('*').order('full_name', { ascending: true });
 
   if (!options?.includeInactive) {
     query = query.eq('active', true);
@@ -119,7 +118,6 @@ export async function createPerson(input: PersonInput) {
     full_name: input.full_name.trim(),
     birth_date: input.birth_date,
     generation: input.generation,
-    notes: input.notes?.trim() || null,
     active: input.active ?? true,
   };
 
@@ -137,7 +135,6 @@ export async function updatePerson(id: string, input: PersonInput) {
     full_name: input.full_name.trim(),
     birth_date: input.birth_date,
     generation: input.generation,
-    notes: input.notes?.trim() || null,
     active: input.active ?? true,
   };
 
