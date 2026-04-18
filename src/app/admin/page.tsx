@@ -14,8 +14,12 @@ export default async function AdminPage({
   await requireAdminSession();
   const params = await searchParams;
   const query = params.query?.trim() ?? '';
-  const people = await getPeople({ includeInactive: false, query });
   const generation = params.generation?.trim() ?? '';
+  const people = await getPeople({
+    includeInactive: false,
+    query,
+    generation: generation ? (generation as 'child' | 'grandchild' | 'great-grandchild' | 'other') : undefined,
+  });
 
   return (
     <AppShell>
@@ -36,7 +40,7 @@ export default async function AdminPage({
         <AdminSearch initialQuery={query} initialGeneration={generation as '' | 'child' | 'grandchild' | 'great-grandchild' | 'other'} generationPlaceholder="All generations" />
       </SurfaceCard>
 
-      <AdminTable people={people} />
+      <AdminTable people={people} emptyMessage={generation ? `No ${generation}s found.` : 'No family members match this view yet.'} />
     </AppShell>
   );
 }

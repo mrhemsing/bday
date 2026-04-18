@@ -62,11 +62,12 @@ export interface PersonInput {
   active?: boolean;
 }
 
-export async function getPeople(options?: { includeInactive?: boolean; query?: string }) {
+export async function getPeople(options?: { includeInactive?: boolean; query?: string; generation?: Generation }) {
   if (!hasSupabaseEnv()) {
     return samplePeople
       .filter((person) => options?.includeInactive || person.active)
       .filter((person) => !options?.query || person.full_name.toLowerCase().includes(options.query.toLowerCase()))
+      .filter((person) => !options?.generation || person.generation === options.generation)
       .sort((a, b) => a.full_name.localeCompare(b.full_name));
   }
 
@@ -79,6 +80,10 @@ export async function getPeople(options?: { includeInactive?: boolean; query?: s
 
   if (options?.query) {
     query = query.ilike('full_name', `%${options.query}%`);
+  }
+
+  if (options?.generation) {
+    query = query.eq('generation', options.generation);
   }
 
   const { data, error } = await query;
