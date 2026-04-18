@@ -138,7 +138,7 @@ export function HomeContent({
         )}
       </div>
 
-      <BirthdayList title="This Month" description={`All birthdays in ${monthName}.`} entries={entries} />
+      <BirthdayList title="This Month" description={`All birthdays in ${monthName}.`} entries={entries} mode="month" />
     </div>
   );
 }

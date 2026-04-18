@@ -1,13 +1,31 @@
 import type { BirthdayBuckets, BirthdayEntry, BirthdayStats, Person } from './types';
 
-export function getMonthName(monthIndex: number) {
-  return new Intl.DateTimeFormat('en-US', { month: 'long' }).format(new Date(2026, monthIndex, 1));
-}
-
+const PACIFIC_TIME_ZONE = 'America/Los_Angeles';
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
 
-function startOfDay(date: Date) {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+function getPacificDateParts(referenceDate = new Date()) {
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: PACIFIC_TIME_ZONE,
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  });
+
+  const parts = formatter.formatToParts(referenceDate);
+  const year = Number(parts.find((part) => part.type === 'year')?.value ?? 0);
+  const month = Number(parts.find((part) => part.type === 'month')?.value ?? 0);
+  const day = Number(parts.find((part) => part.type === 'day')?.value ?? 0);
+
+  return { year, month, day };
+}
+
+function getPacificStartOfDay(referenceDate = new Date()) {
+  const { year, month, day } = getPacificDateParts(referenceDate);
+  return new Date(year, month - 1, day);
+}
+
+export function getMonthName(monthIndex: number) {
+  return new Intl.DateTimeFormat('en-US', { month: 'long' }).format(new Date(2026, monthIndex, 1));
 }
 
 function parseBirthDate(value: string) {
@@ -17,11 +35,12 @@ function parseBirthDate(value: string) {
 
 export function getNextBirthdayDate(birthDate: string, referenceDate = new Date()) {
   const { month, day } = parseBirthDate(birthDate);
-  const reference = startOfDay(referenceDate);
-  let nextBirthday = new Date(reference.getFullYear(), month - 1, day);
+  const { year } = getPacificDateParts(referenceDate);
+  const reference = getPacificStartOfDay(referenceDate);
+  let nextBirthday = new Date(year, month - 1, day);
 
   if (nextBirthday < reference) {
-    nextBirthday = new Date(reference.getFullYear() + 1, month - 1, day);
+    nextBirthday = new Date(year + 1, month - 1, day);
   }
 
   return nextBirthday;
@@ -36,7 +55,7 @@ export function getAgeTurning(birthDate: string, referenceDate = new Date()) {
 }
 
 export function getDaysUntilBirthday(birthDate: string, referenceDate = new Date()) {
-  const reference = startOfDay(referenceDate);
+  const reference = getPacificStartOfDay(referenceDate);
   const nextBirthday = getNextBirthdayDate(birthDate, referenceDate);
   return Math.round((nextBirthday.getTime() - reference.getTime()) / DAY_IN_MS);
 }
@@ -45,6 +64,7 @@ export function toBirthdayEntry(person: Person, referenceDate = new Date()): Bir
   const { month, day } = parseBirthDate(person.birth_date);
   const nextBirthday = getNextBirthdayDate(person.birth_date, referenceDate);
   const daysUntil = getDaysUntilBirthday(person.birth_date, referenceDate);
+  const pacificToday = getPacificDateParts(referenceDate);
 
   return {
     ...person,
@@ -53,11 +73,9 @@ export function toBirthdayEntry(person: Person, referenceDate = new Date()): Bir
     nextBirthday,
     ageTurning: getAgeTurning(person.birth_date, referenceDate),
     daysUntil,
-    isToday: daysUntil === 0,
+    isToday: month === pacificToday.month && day === pacificToday.day,
     isThisWeek: daysUntil >= 0 && daysUntil <= 7,
-    isThisMonth: nextBirthday.getFullYear() === referenceDate.getFullYear()
-      ? nextBirthday.getMonth() === referenceDate.getMonth()
-      : nextBirthday.getMonth() === referenceDate.getMonth() || (referenceDate.getMonth() === 11 && nextBirthday.getMonth() === 0),
+    isThisMonth: nextBirthday.getMonth() === pacificToday.month - 1,
   };
 }
 

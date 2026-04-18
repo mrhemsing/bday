@@ -16,7 +16,17 @@ const generationLabels: Record<Generation, string> = {
   other: 'Other',
 };
 
-export function BirthdayList({ title, description, entries }: { title: string; description: string; entries: BirthdayEntry[] }) {
+export function BirthdayList({
+  title,
+  description,
+  entries,
+  mode = 'upcoming',
+}: {
+  title: string;
+  description: string;
+  entries: BirthdayEntry[];
+  mode?: 'upcoming' | 'month';
+}) {
   const showCount = entries.length > 0;
   const titleClassName = title === 'Today' ? 'text-slate-950' : title === 'This Month' ? 'text-slate-800' : 'text-slate-900';
   const descriptionClassName = title === 'This Month' ? 'text-slate-400' : 'text-slate-500';
@@ -39,8 +49,18 @@ export function BirthdayList({ title, description, entries }: { title: string; d
       ) : (
         <div className="space-y-5">
           {entries.map((entry) => {
+            const isMonthMode = mode === 'month';
+            const now = new Date();
+            const entryDateThisYear = new Date(now.getFullYear(), entry.month - 1, entry.day);
+            const hasPassedThisYear = entryDateThisYear < new Date(now.getFullYear(), now.getMonth(), now.getDate());
             const relativeLabel = entry.daysUntil === 0 ? 'Today' : entry.daysUntil === 1 ? 'Tomorrow' : `In ${entry.daysUntil} days`;
             const ageLabel = entry.ageTurning !== null ? `Turning ${entry.ageTurning}` : null;
+            const monthModeLabel =
+              entry.ageTurning !== null && hasPassedThisYear
+                ? `Turned ${entry.ageTurning - 1} on ${formatMonthDay(entry.birth_date)}`
+                : entry.ageTurning !== null
+                  ? `Turning ${entry.ageTurning} on ${formatMonthDay(entry.birth_date)}`
+                  : formatMonthDay(entry.birth_date);
 
             return (
               <div
@@ -57,7 +77,7 @@ export function BirthdayList({ title, description, entries }: { title: string; d
                 <h3 className="relative z-10 text-2xl font-semibold tracking-[-0.03em] text-slate-950">{entry.full_name}</h3>
 
                 <p className={`relative z-10 mt-3 text-lg font-medium ${relativeLabel === 'Today' || relativeLabel === 'Tomorrow' ? 'text-orange-600' : 'text-slate-700'}`}>
-                  {ageLabel ? `${ageLabel} ${relativeLabel.toLowerCase()}` : relativeLabel}
+                  {isMonthMode ? monthModeLabel : ageLabel ? `${ageLabel} ${relativeLabel.toLowerCase()}` : relativeLabel}
                 </p>
 
                 <div className="relative z-10 mt-3 flex flex-wrap items-center gap-2 text-base text-slate-500">
@@ -68,7 +88,7 @@ export function BirthdayList({ title, description, entries }: { title: string; d
                   >
                     {generationLabels[entry.generation]}
                   </span>
-                  {entry.isToday ? <span className="rounded-full bg-orange-500 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-white">Today</span> : null}
+                  {entry.isToday && !isMonthMode ? <span className="rounded-full bg-orange-500 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-white">Today</span> : null}
                 </div>
 
                 {entry.notes ? <p className="relative z-10 mt-4 text-base leading-7 text-slate-600">{entry.notes}</p> : null}
