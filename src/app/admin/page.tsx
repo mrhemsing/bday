@@ -23,7 +23,6 @@ export default async function AdminPage({
   const query = params.query?.trim() ?? '';
   const generation = params.generation?.trim() ?? '';
   const people = await getPeople({
-    includeInactive: false,
     query,
     generation: generation ? (generation as 'child' | 'grandchild' | 'great-grandchild' | 'other') : undefined,
   });
@@ -43,7 +42,7 @@ export default async function AdminPage({
         </Link>
       </section>
 
-      <SurfaceCard className="mb-6 p-[19px]">
+      <SurfaceCard className="mb-6 p-5">
         <AdminSearch initialQuery={query} initialGeneration={generation as '' | 'child' | 'grandchild' | 'great-grandchild' | 'other'} generationPlaceholder="All generations" />
       </SurfaceCard>
 

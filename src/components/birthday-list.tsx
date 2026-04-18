@@ -1,10 +1,10 @@
-import { formatMonthDay } from '@/lib/birthdays';
+import { formatBirthday, formatMonthDay } from '@/lib/birthdays';
 import type { BirthdayEntry, Generation } from '@/lib/types';
 import { SurfaceCard } from './cards';
 
 const generationBadgeStyles: Record<Generation, string> = {
   child: 'bg-sky-50 text-sky-700 border-transparent',
-  grandchild: 'bg-violet-50 text-violet-700 border-transparent',
+  grandchild: 'bg-violet-50 text-slate-700 border-transparent',
   'great-grandchild': 'bg-emerald-50 text-emerald-700 border-transparent',
   other: 'bg-slate-100 text-slate-600 border-transparent',
 };
@@ -16,16 +16,23 @@ const generationLabels: Record<Generation, string> = {
   other: 'Other',
 };
 
+function getGenerationLabel(entry: { generation: Generation; order_number: number | null }) {
+  const label = generationLabels[entry.generation];
+  return entry.order_number ? `${label} (${entry.order_number})` : label;
+}
+
 export function BirthdayList({
   title,
   description,
   entries,
+  memorialEntries = [],
   mode = 'upcoming',
   viewedMonth,
 }: {
   title: string;
   description: string;
   entries: BirthdayEntry[];
+  memorialEntries?: BirthdayEntry[];
   mode?: 'upcoming' | 'month';
   viewedMonth?: number;
 }) {
@@ -66,7 +73,7 @@ export function BirthdayList({
         {showCount ? <div className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-600">{entries.length}</div> : null}
       </div>
 
-      {entries.length === 0 ? (
+      {entries.length === 0 && memorialEntries.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-5 text-sm text-slate-500">
           {emptyMessage}
         </div>
@@ -92,6 +99,7 @@ export function BirthdayList({
               mode={mode}
             />
           ) : null}
+          {memorialEntries.length > 0 ? <MemorialSection entries={memorialEntries} /> : null}
         </div>
       ) : (
         <BirthdayEntries entries={entries} mode={mode} />
@@ -170,7 +178,7 @@ function BirthdayEntries({ entries, mode }: { entries: BirthdayEntry[]; mode: 'u
               <span
                 className={`inline-flex items-center rounded-full border px-2.5 py-1 text-sm font-medium ${generationBadgeStyles[entry.generation]}`}
               >
-                {generationLabels[entry.generation]}
+                {getGenerationLabel(entry)}
               </span>
               {entry.isToday && !isMonthMode ? <span className="rounded-full bg-orange-500 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-white">Today</span> : null}
             </div>
@@ -179,6 +187,31 @@ function BirthdayEntries({ entries, mode }: { entries: BirthdayEntry[]; mode: 'u
           </div>
         );
       })}
+    </div>
+  );
+}
+
+function MemorialSection({ entries }: { entries: BirthdayEntry[] }) {
+  return (
+    <div className="rounded-[1.75rem] border border-slate-200 p-4" style={{ backgroundColor: '#E2E8F0' }}>
+      <div className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">In Loving Memory</div>
+      <div className="space-y-4">
+        {entries.map((entry) => (
+          <div key={entry.id} className="rounded-[1.5rem] border border-slate-200 bg-white/80 p-5 shadow-[0_1px_2px_rgba(15,23,42,0.03)]">
+            <h3 className="text-2xl font-semibold tracking-[-0.03em] text-slate-900">{entry.full_name}</h3>
+            <p className="mt-3 text-lg font-medium text-slate-700">
+              {entry.ageTurning !== null ? `Would have turned ${entry.ageTurning} on ${formatMonthDay(entry.birth_date)}` : `Remembered on ${formatMonthDay(entry.birth_date)}`}
+            </p>
+            {entry.deceased_at ? <p className="mt-2 text-base text-slate-500">Passed {formatBirthday(entry.deceased_at)}</p> : null}
+            <div className="mt-3">
+              <span className="inline-flex items-center rounded-full border border-transparent bg-slate-100 px-2.5 py-1 text-sm font-medium text-slate-500">
+                {getGenerationLabel(entry)}
+              </span>
+            </div>
+            {entry.notes ? <p className="mt-4 text-base leading-7 text-slate-600">{entry.notes}</p> : null}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -28,7 +28,7 @@ export function PersonForm({
 }) {
   const initialBirthDate = splitBirthDate(person?.birth_date);
   const [fullName, setFullName] = useState(person?.full_name ?? '');
-  const [isActive, setIsActive] = useState(person?.active ?? true);
+  const [orderNumber, setOrderNumber] = useState(person?.order_number?.toString() ?? '');
   const [isDeceased, setIsDeceased] = useState(person?.deceased ?? false);
   const [showInMemorial, setShowInMemorial] = useState(person?.show_in_memorial ?? false);
   const [deceasedAt, setDeceasedAt] = useState(person?.deceased_at ?? '');
@@ -78,19 +78,20 @@ export function PersonForm({
           </select>
         </Field>
 
-        <div className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-          <label className="flex items-center gap-3 text-sm font-medium text-slate-700">
-            <input
-              type="checkbox"
-              name="active"
-              checked={isDeceased ? false : isActive}
-              onChange={(event) => setIsActive(event.target.checked)}
-              disabled={isDeceased}
-              className="h-4 w-4 rounded border-slate-300 text-[color:var(--primary)] focus:ring-[color:var(--primary)] disabled:opacity-50"
-            />
-            <span>Active</span>
-          </label>
+        <Field htmlFor="order_number" label="Order number" optional>
+          <input
+            id="order_number"
+            name="order_number"
+            type="text"
+            inputMode="numeric"
+            placeholder="e.g. 55"
+            value={orderNumber}
+            onChange={(event) => setOrderNumber(event.target.value)}
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none ring-0 transition focus:border-[color:var(--primary)]"
+          />
+        </Field>
 
+        <div className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
           <label className="flex items-center gap-3 text-sm font-medium text-slate-700">
             <input
               type="checkbox"
@@ -100,7 +101,6 @@ export function PersonForm({
                 const checked = event.target.checked;
                 setIsDeceased(checked);
                 if (checked) {
-                  setIsActive(false);
                   setShowInMemorial(true);
                 } else {
                   setDeceasedAt('');

@@ -8,8 +8,8 @@ const samplePeople: Person[] = [
     full_name: 'Evelyn Hemsing',
     birth_date: '1952-02-14',
     generation: 'other',
+    order_number: null,
     notes: 'Family matriarch',
-    active: true,
     deceased: false,
     deceased_at: null,
     show_in_memorial: false,
@@ -21,8 +21,8 @@ const samplePeople: Person[] = [
     full_name: 'Caleb Hemsing',
     birth_date: '1984-06-02',
     generation: 'other',
+    order_number: null,
     notes: 'Loves hosting the summer cookout',
-    active: true,
     deceased: false,
     deceased_at: null,
     show_in_memorial: false,
@@ -34,8 +34,8 @@ const samplePeople: Person[] = [
     full_name: 'Mara Hemsing',
     birth_date: '2012-04-18',
     generation: 'child',
+    order_number: null,
     notes: 'Prefers strawberry cake',
-    active: true,
     deceased: false,
     deceased_at: null,
     show_in_memorial: false,
@@ -47,8 +47,8 @@ const samplePeople: Person[] = [
     full_name: 'Owen Hemsing',
     birth_date: '2016-11-09',
     generation: 'grandchild',
+    order_number: null,
     notes: null,
-    active: true,
     deceased: false,
     deceased_at: null,
     show_in_memorial: false,
@@ -60,8 +60,8 @@ const samplePeople: Person[] = [
     full_name: 'Ivy Hemsing',
     birth_date: '2021-12-28',
     generation: 'great-grandchild',
+    order_number: null,
     notes: 'Usually celebrates with pancakes',
-    active: true,
     deceased: false,
     deceased_at: null,
     show_in_memorial: false,
@@ -74,16 +74,15 @@ export interface PersonInput {
   full_name: string;
   birth_date: string;
   generation: Generation;
-  active?: boolean;
+  order_number?: number | null;
   deceased?: boolean;
   deceased_at?: string | null;
   show_in_memorial?: boolean;
 }
 
-export async function getPeople(options?: { includeInactive?: boolean; query?: string; generation?: Generation }) {
+export async function getPeople(options?: { query?: string; generation?: Generation }) {
   if (!hasSupabaseEnv()) {
     return samplePeople
-      .filter((person) => options?.includeInactive || person.active)
       .filter((person) => !options?.query || person.full_name.toLowerCase().includes(options.query.toLowerCase()))
       .filter((person) => !options?.generation || person.generation === options.generation)
       .sort((a, b) => a.full_name.localeCompare(b.full_name));
@@ -91,10 +90,6 @@ export async function getPeople(options?: { includeInactive?: boolean; query?: s
 
   const supabase = createSupabaseAdminClient();
   let query = supabase.from('people').select('*').order('full_name', { ascending: true });
-
-  if (!options?.includeInactive) {
-    query = query.eq('active', true);
-  }
 
   if (options?.query) {
     query = query.ilike('full_name', `%${options.query}%`);
@@ -140,7 +135,7 @@ export async function createPerson(input: PersonInput) {
     full_name: input.full_name.trim(),
     birth_date: input.birth_date,
     generation: input.generation,
-    active: input.active ?? true,
+    order_number: input.order_number ?? null,
     deceased: input.deceased ?? false,
     deceased_at: input.deceased ? input.deceased_at ?? null : null,
     show_in_memorial: input.deceased ? input.show_in_memorial ?? true : false,
@@ -160,23 +155,13 @@ export async function updatePerson(id: string, input: PersonInput) {
     full_name: input.full_name.trim(),
     birth_date: input.birth_date,
     generation: input.generation,
-    active: input.active ?? true,
+    order_number: input.order_number ?? null,
     deceased: input.deceased ?? false,
     deceased_at: input.deceased ? input.deceased_at ?? null : null,
     show_in_memorial: input.deceased ? input.show_in_memorial ?? true : false,
   };
 
   const { error } = await supabase.from('people').update(payload).eq('id', id);
-  if (error) throw new Error(error.message);
-}
-
-export async function archivePerson(id: string) {
-  if (!hasSupabaseEnv()) {
-    throw new Error('Supabase environment variables are required before archiving records.');
-  }
-
-  const supabase = createSupabaseAdminClient();
-  const { error } = await supabase.from('people').update({ active: false }).eq('id', id);
   if (error) throw new Error(error.message);
 }
 

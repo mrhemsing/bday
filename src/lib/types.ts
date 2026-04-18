@@ -7,8 +7,8 @@ export interface Person {
   full_name: string;
   birth_date: string;
   generation: Generation;
+  order_number: number | null;
   notes: string | null;
-  active: boolean;
   deceased: boolean;
   deceased_at: string | null;
   show_in_memorial: boolean;

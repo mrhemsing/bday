@@ -8,16 +8,17 @@ import type { BirthdayEntry } from '@/lib/types';
 
 const SWIPE_THRESHOLD = 42;
 
-
 export function HomeContent({
   totalMembers,
   entriesByMonth,
+  memorialEntriesByMonth,
   todayEntries,
   nextUp,
   initialMonth,
 }: {
   totalMembers: number;
   entriesByMonth: BirthdayEntry[][];
+  memorialEntriesByMonth: BirthdayEntry[][];
   todayEntries: BirthdayEntry[];
   nextUp: BirthdayEntry | null;
   initialMonth: number;
@@ -27,6 +28,7 @@ export function HomeContent({
   const startYRef = useRef<number | null>(null);
 
   const entries = useMemo(() => entriesByMonth[monthIndex] ?? [], [entriesByMonth, monthIndex]);
+  const memorialEntries = useMemo(() => memorialEntriesByMonth[monthIndex] ?? [], [memorialEntriesByMonth, monthIndex]);
   const monthName = getMonthName(monthIndex);
   const year = new Date().getFullYear();
   const isCurrentMonth = monthIndex === initialMonth - 1;
@@ -98,12 +100,12 @@ export function HomeContent({
       </SurfaceCard>
 
       {isCurrentMonth && (todayEntries.length > 0 || nextUp) ? (
-        <div className="grid gap-6 lg:grid-cols-2">
-          {todayEntries.length > 0 ? <BirthdayList title="Today" description="" entries={todayEntries} /> : <div className="hidden lg:block" />}
-
-          {nextUp ? (
-            <SurfaceCard className="bg-orange-50 p-6">
-              <div className="flex h-full flex-col gap-2 sm:justify-between">
+        <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+          {todayEntries.length > 0 ? (
+            <BirthdayList title="Today" description="" entries={todayEntries} />
+          ) : nextUp ? (
+            <SurfaceCard className="bg-orange-50 p-6 lg:col-start-1">
+              <div className="flex h-full flex-col gap-2 items-start text-left sm:justify-between">
                 <div>
                   <div className="text-sm font-semibold uppercase tracking-[0.3em] text-orange-600">Next up</div>
                   <div className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-slate-950">{nextUp.full_name}</div>
@@ -120,10 +122,30 @@ export function HomeContent({
           ) : (
             <div className="hidden lg:block" />
           )}
+
+          {todayEntries.length > 0 && nextUp ? (
+            <SurfaceCard className="bg-orange-50 p-6">
+              <div className="flex h-full flex-col gap-2 items-start text-left sm:justify-between">
+                <div>
+                  <div className="text-sm font-semibold uppercase tracking-[0.3em] text-orange-600">Next up</div>
+                  <div className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-slate-950">{nextUp.full_name}</div>
+                </div>
+                <div className="text-base font-medium text-slate-600">
+                  {nextUp.ageTurning !== null ? `Turning ${nextUp.ageTurning} • ` : ''}
+                  {formatMonthDay(nextUp.birth_date)}
+                  <div className="mt-1 font-semibold text-orange-600">
+                    {nextUp.daysUntil === 0 ? 'Today' : nextUp.daysUntil === 1 ? 'Tomorrow' : `In ${nextUp.daysUntil} days`}
+                  </div>
+                </div>
+              </div>
+            </SurfaceCard>
+          ) : todayEntries.length > 0 ? (
+            <div className="hidden lg:block" />
+          ) : null}
         </div>
       ) : null}
 
-      <BirthdayList title="This Month" description={`All birthdays in ${monthName}.`} entries={entries} mode="month" viewedMonth={monthIndex + 1} />
+      <BirthdayList title="This Month" description={`All birthdays in ${monthName}.`} entries={entries} memorialEntries={memorialEntries} mode="month" viewedMonth={monthIndex + 1} />
     </div>
   );
 }

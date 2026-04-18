@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { archivePerson, createPerson, deletePerson, updatePerson } from '@/lib/people';
+import { createPerson, deletePerson, updatePerson } from '@/lib/people';
 import { env } from '@/lib/env';
 import { clearAdminSession, createAdminSession } from '@/lib/session';
 import { generationOptions, type Generation } from '@/lib/types';
@@ -23,7 +23,7 @@ function validatePersonForm(formData: FormData) {
   const birthMonth = readString(formData, 'birth_month');
   const birthDay = readString(formData, 'birth_day');
   const generation = readString(formData, 'generation') as Generation;
-  const active = formData.get('active') === 'on';
+  const order_number_raw = readString(formData, 'order_number');
   const deceased = formData.get('deceased') === 'on';
   const deceased_at = readString(formData, 'deceased_at');
   const show_in_memorial = formData.get('show_in_memorial') === 'on';
@@ -34,6 +34,12 @@ function validatePersonForm(formData: FormData) {
 
   const birth_date = `${birthYear.padStart(4, '0')}-${birthMonth.padStart(2, '0')}-${birthDay.padStart(2, '0')}`;
   if (!isValidDateString(birth_date)) throw new Error('Please choose a valid birth date.');
+
+  const order_number = order_number_raw ? Number(order_number_raw) : null;
+  const hasValidOrderNumber = order_number !== null && Number.isInteger(order_number) && order_number > 0;
+  if (order_number_raw && !hasValidOrderNumber) {
+    throw new Error('Please enter a valid positive order number.');
+  }
 
   if (deceased && !deceased_at) {
     throw new Error('Please enter a date of passing.');
@@ -47,7 +53,7 @@ function validatePersonForm(formData: FormData) {
     full_name,
     birth_date,
     generation,
-    active: deceased ? false : active,
+    order_number,
     deceased,
     deceased_at: deceased ? deceased_at : null,
     show_in_memorial: deceased ? show_in_memorial : false,
@@ -68,13 +74,6 @@ export async function updatePersonAction(id: string, formData: FormData) {
   revalidatePath('/');
   revalidatePath('/admin');
   revalidatePath(`/admin/${id}`);
-  redirect('/admin');
-}
-
-export async function archivePersonAction(id: string) {
-  await archivePerson(id);
-  revalidatePath('/');
-  revalidatePath('/admin');
   redirect('/admin');
 }
 

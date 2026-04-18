@@ -25,9 +25,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-6 py-6 lg:px-8">{children}</main>
-      <div className="mx-auto max-w-6xl px-6 pb-8 lg:px-8">
-        <BAverageBadge variant="black" />
-      </div>
     </div>
   );
 }
