@@ -43,7 +43,7 @@ export default async function AdminPage({
         </Link>
       </section>
 
-      <SurfaceCard className="mb-6 p-5">
+      <SurfaceCard className="mb-6 p-[19px]">
         <AdminSearch initialQuery={query} initialGeneration={generation as '' | 'child' | 'grandchild' | 'great-grandchild' | 'other'} generationPlaceholder="All generations" />
       </SurfaceCard>
 
