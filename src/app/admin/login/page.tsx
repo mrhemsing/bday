@@ -6,7 +6,10 @@ export default function AdminLoginPage() {
     <AppShell>
       <div className="mx-auto max-w-md">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Sign in to manage birthdays</h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+            <span className="sm:hidden">Sign in to<br />manage birthdays</span>
+            <span className="hidden sm:inline">Sign in to manage birthdays</span>
+          </h1>
           <p className="mt-3 text-sm leading-7 text-slate-500">
             Use the simple admin credentials for this app.
           </p>
