@@ -96,9 +96,9 @@ export function HomeContent({
         </div>
       </SurfaceCard>
 
-      {isCurrentMonth ? (
+      {isCurrentMonth && (todayEntries.length > 0 || nextUp) ? (
         <div className="grid gap-6 lg:grid-cols-2">
-          <BirthdayList title="Today" description="Birthdays happening today." entries={todayEntries} />
+          {todayEntries.length > 0 ? <BirthdayList title="Today" description="" entries={todayEntries} /> : <div className="hidden lg:block" />}
 
           {nextUp ? (
             <SurfaceCard className="bg-orange-50 p-6">
