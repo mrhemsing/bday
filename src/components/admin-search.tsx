@@ -4,10 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { generationOptions, type Generation } from '@/lib/types';
 
+const ALL_GENERATIONS = '__all__';
+
 export function AdminSearch({
   initialQuery,
   initialGeneration = '',
-  generationPlaceholder = 'Select generation',
+  generationPlaceholder = 'All generations',
 }: {
   initialQuery: string;
   initialGeneration?: '' | Generation;
@@ -80,11 +82,11 @@ export function AdminSearch({
       </div>
 
       <select
-        value={generation}
-        onChange={(event) => setGeneration(event.target.value as '' | Generation)}
+        value={generation || ALL_GENERATIONS}
+        onChange={(event) => setGeneration(event.target.value === ALL_GENERATIONS ? '' : (event.target.value as Generation))}
         className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none ring-0 transition focus:border-violet-300"
       >
-        <option value="">{generationPlaceholder}</option>
+        <option value={ALL_GENERATIONS}>{generationPlaceholder}</option>
         {generationOptions.map((option) => (
           <option key={option} value={option}>
             {option}

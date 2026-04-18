@@ -33,7 +33,7 @@ export default async function AdminPage({
       </section>
 
       <SurfaceCard className="mb-6 p-5">
-        <AdminSearch initialQuery={query} initialGeneration={generation as '' | 'child' | 'grandchild' | 'great-grandchild' | 'other'} generationPlaceholder="Select generation" />
+        <AdminSearch initialQuery={query} initialGeneration={generation as '' | 'child' | 'grandchild' | 'great-grandchild' | 'other'} generationPlaceholder="All generations" />
       </SurfaceCard>
 
       <AdminTable people={people} />
