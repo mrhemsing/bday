@@ -68,27 +68,8 @@ export function HomeContent({
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[color:var(--primary)]">Upcoming family birthdays</p>
           <p className="mt-1 text-sm text-slate-500">({totalMembers} members)</p>
           <div className="mt-5">
-            <div className="text-left text-4xl font-semibold tracking-[-0.03em] text-slate-950 sm:hidden">
+            <div className="month-header-nudge text-left text-4xl font-semibold tracking-[-0.03em] text-slate-950 sm:hidden">
               {monthName} {year}
-            </div>
-            <div className="mt-4 flex items-center justify-between gap-3 sm:hidden">
-              <button
-                type="button"
-                onClick={() => moveMonth(-1)}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-lg font-medium text-slate-500 transition hover:text-slate-900"
-                aria-label="Previous month"
-              >
-                ←
-              </button>
-              <p className="text-center text-sm font-medium text-slate-400">(Swipe to change month)</p>
-              <button
-                type="button"
-                onClick={() => moveMonth(1)}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-lg font-medium text-slate-500 transition hover:text-slate-900"
-                aria-label="Next month"
-              >
-                →
-              </button>
             </div>
             <div className="mt-4 hidden items-center gap-3 sm:flex">
               <button
