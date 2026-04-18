@@ -6,6 +6,13 @@ import { SurfaceCard } from '@/components/cards';
 import { requireAdminSession } from '@/lib/auth';
 import { getPeople } from '@/lib/people';
 
+const emptyMessagesByGeneration = {
+  child: 'No children found.',
+  grandchild: 'No grandchildren found.',
+  'great-grandchild': 'No great-grandchildren found.',
+  other: 'No family members found.',
+} as const;
+
 export default async function AdminPage({
   searchParams,
 }: {
@@ -40,7 +47,7 @@ export default async function AdminPage({
         <AdminSearch initialQuery={query} initialGeneration={generation as '' | 'child' | 'grandchild' | 'great-grandchild' | 'other'} generationPlaceholder="All generations" />
       </SurfaceCard>
 
-      <AdminTable people={people} emptyMessage={generation ? `No ${generation}s found.` : 'No family members match this view yet.'} />
+      <AdminTable people={people} emptyMessage={generation ? emptyMessagesByGeneration[generation as keyof typeof emptyMessagesByGeneration] : 'No family members match this view yet.'} />
     </AppShell>
   );
 }
