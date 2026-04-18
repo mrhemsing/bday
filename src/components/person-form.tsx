@@ -2,13 +2,13 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { generationOptions, type Person } from '@/lib/types';
+import { SurfaceCard } from './cards';
+import { BirthdayWheelPicker } from './birthday-wheel-picker';
 
 function normalizeNameInput(value: string) {
   return value.replace(/(^|[\s-'])([a-z])/g, (_, prefix: string, char: string) => `${prefix}${char.toUpperCase()}`);
 }
-import { generationOptions, type Person } from '@/lib/types';
-import { SurfaceCard } from './cards';
-import { BirthdayWheelPicker } from './birthday-wheel-picker';
 
 function splitBirthDate(value?: string) {
   const [year = '', month = '', day = ''] = value?.split('-') ?? [];
@@ -28,6 +28,10 @@ export function PersonForm({
 }) {
   const initialBirthDate = splitBirthDate(person?.birth_date);
   const [fullName, setFullName] = useState(person?.full_name ?? '');
+  const [isActive, setIsActive] = useState(person?.active ?? true);
+  const [isDeceased, setIsDeceased] = useState(person?.deceased ?? false);
+  const [showInMemorial, setShowInMemorial] = useState(person?.show_in_memorial ?? false);
+  const [deceasedAt, setDeceasedAt] = useState(person?.deceased_at ?? '');
   const [birthDate, setBirthDate] = useState({
     month: initialBirthDate.month || '01',
     day: initialBirthDate.day || '01',
@@ -73,6 +77,70 @@ export function PersonForm({
             ))}
           </select>
         </Field>
+
+        <div className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <label className="flex items-center gap-3 text-sm font-medium text-slate-700">
+            <input
+              type="checkbox"
+              name="active"
+              checked={isDeceased ? false : isActive}
+              onChange={(event) => setIsActive(event.target.checked)}
+              disabled={isDeceased}
+              className="h-4 w-4 rounded border-slate-300 text-[color:var(--primary)] focus:ring-[color:var(--primary)] disabled:opacity-50"
+            />
+            <span>Active</span>
+          </label>
+
+          <label className="flex items-center gap-3 text-sm font-medium text-slate-700">
+            <input
+              type="checkbox"
+              name="deceased"
+              checked={isDeceased}
+              onChange={(event) => {
+                const checked = event.target.checked;
+                setIsDeceased(checked);
+                if (checked) {
+                  setIsActive(false);
+                  setShowInMemorial(true);
+                } else {
+                  setDeceasedAt('');
+                  setShowInMemorial(false);
+                }
+              }}
+              className="h-4 w-4 rounded border-slate-300 text-[color:var(--primary)] focus:ring-[color:var(--primary)]"
+            />
+            <span>Deceased</span>
+          </label>
+        </div>
+
+        {isDeceased ? (
+          <div className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <Field htmlFor="deceased_at" label="Date of passing">
+              <input
+                id="deceased_at"
+                name="deceased_at"
+                type="text"
+                inputMode="numeric"
+                placeholder="YYYY-MM-DD"
+                value={deceasedAt}
+                onChange={(event) => setDeceasedAt(event.target.value)}
+                className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none ring-0 transition focus:border-[color:var(--primary)]"
+                required={isDeceased}
+              />
+            </Field>
+
+            <label className="flex items-center gap-3 text-sm font-medium text-slate-700">
+              <input
+                type="checkbox"
+                name="show_in_memorial"
+                checked={showInMemorial}
+                onChange={(event) => setShowInMemorial(event.target.checked)}
+                className="h-4 w-4 rounded border-slate-300 text-[color:var(--primary)] focus:ring-[color:var(--primary)]"
+              />
+              <span>Show in memorial section</span>
+            </label>
+          </div>
+        ) : null}
 
         <div className="flex items-center justify-end gap-3">
           {cancelHref ? (

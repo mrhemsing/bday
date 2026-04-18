@@ -10,6 +10,9 @@ const samplePeople: Person[] = [
     generation: 'other',
     notes: 'Family matriarch',
     active: true,
+    deceased: false,
+    deceased_at: null,
+    show_in_memorial: false,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   },
@@ -20,6 +23,9 @@ const samplePeople: Person[] = [
     generation: 'other',
     notes: 'Loves hosting the summer cookout',
     active: true,
+    deceased: false,
+    deceased_at: null,
+    show_in_memorial: false,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   },
@@ -30,6 +36,9 @@ const samplePeople: Person[] = [
     generation: 'child',
     notes: 'Prefers strawberry cake',
     active: true,
+    deceased: false,
+    deceased_at: null,
+    show_in_memorial: false,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   },
@@ -40,6 +49,9 @@ const samplePeople: Person[] = [
     generation: 'grandchild',
     notes: null,
     active: true,
+    deceased: false,
+    deceased_at: null,
+    show_in_memorial: false,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   },
@@ -50,6 +62,9 @@ const samplePeople: Person[] = [
     generation: 'great-grandchild',
     notes: 'Usually celebrates with pancakes',
     active: true,
+    deceased: false,
+    deceased_at: null,
+    show_in_memorial: false,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   },
@@ -60,6 +75,9 @@ export interface PersonInput {
   birth_date: string;
   generation: Generation;
   active?: boolean;
+  deceased?: boolean;
+  deceased_at?: string | null;
+  show_in_memorial?: boolean;
 }
 
 export async function getPeople(options?: { includeInactive?: boolean; query?: string; generation?: Generation }) {
@@ -123,6 +141,9 @@ export async function createPerson(input: PersonInput) {
     birth_date: input.birth_date,
     generation: input.generation,
     active: input.active ?? true,
+    deceased: input.deceased ?? false,
+    deceased_at: input.deceased ? input.deceased_at ?? null : null,
+    show_in_memorial: input.deceased ? input.show_in_memorial ?? true : false,
   };
 
   const { error } = await supabase.from('people').insert(payload);
@@ -140,6 +161,9 @@ export async function updatePerson(id: string, input: PersonInput) {
     birth_date: input.birth_date,
     generation: input.generation,
     active: input.active ?? true,
+    deceased: input.deceased ?? false,
+    deceased_at: input.deceased ? input.deceased_at ?? null : null,
+    show_in_memorial: input.deceased ? input.show_in_memorial ?? true : false,
   };
 
   const { error } = await supabase.from('people').update(payload).eq('id', id);

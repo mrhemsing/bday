@@ -81,7 +81,7 @@ export function toBirthdayEntry(person: Person, referenceDate = new Date()): Bir
 
 export function getUpcomingBirthdays(people: Person[], referenceDate = new Date()) {
   return people
-    .filter((person) => person.active)
+    .filter((person) => person.active && !person.deceased)
     .map((person) => toBirthdayEntry(person, referenceDate))
     .sort((a, b) => a.nextBirthday.getTime() - b.nextBirthday.getTime() || a.full_name.localeCompare(b.full_name));
 }
@@ -106,7 +106,7 @@ export function getBirthdayStats(people: Person[], referenceDate = new Date()): 
     today: buckets.today.length,
     thisWeek: buckets.today.length + buckets.thisWeek.length,
     thisMonth: buckets.today.length + buckets.thisWeek.length + buckets.thisMonth.length,
-    totalActive: people.filter((person) => person.active).length,
+    totalActive: people.filter((person) => person.active && !person.deceased).length,
   };
 }
 
@@ -127,7 +127,7 @@ export function formatMonthDay(dateString: string) {
 
 export function getBirthdaysForMonth(people: Person[], month: number, referenceDate = new Date()) {
   return people
-    .filter((person) => person.active)
+    .filter((person) => person.active && !person.deceased)
     .map((person) => toBirthdayEntry(person, referenceDate))
     .filter((entry) => entry.month === month)
     .sort((a, b) => a.day - b.day || a.full_name.localeCompare(b.full_name));

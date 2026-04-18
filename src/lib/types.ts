@@ -9,6 +9,9 @@ export interface Person {
   generation: Generation;
   notes: string | null;
   active: boolean;
+  deceased: boolean;
+  deceased_at: string | null;
+  show_in_memorial: boolean;
   created_at: string;
   updated_at: string;
 }

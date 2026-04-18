@@ -91,6 +91,8 @@ export function SwipeableAdminRow({ person }: { person: Person }) {
               <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium capitalize ${generationBadgeStyles[person.generation]}`}>
                 {person.generation.replace('-', ' ')}
               </span>
+              {!person.active ? <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600">Inactive</span> : null}
+              {person.deceased ? <span className="inline-flex items-center rounded-full bg-slate-200 px-2.5 py-1 text-[11px] font-medium text-slate-700">Deceased</span> : null}
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-2">

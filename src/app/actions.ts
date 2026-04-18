@@ -11,22 +11,47 @@ function readString(formData: FormData, key: string) {
   return String(formData.get(key) ?? '').trim();
 }
 
+function isValidDateString(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const parsed = new Date(`${value}T00:00:00`);
+  return !Number.isNaN(parsed.getTime());
+}
+
 function validatePersonForm(formData: FormData) {
   const full_name = readString(formData, 'full_name');
   const birthYear = readString(formData, 'birth_year');
   const birthMonth = readString(formData, 'birth_month');
   const birthDay = readString(formData, 'birth_day');
   const generation = readString(formData, 'generation') as Generation;
+  const active = formData.get('active') === 'on';
+  const deceased = formData.get('deceased') === 'on';
+  const deceased_at = readString(formData, 'deceased_at');
+  const show_in_memorial = formData.get('show_in_memorial') === 'on';
 
   if (!full_name) throw new Error('Please enter a full name.');
   if (!birthYear || !birthMonth || !birthDay) throw new Error('Please choose a complete birth date.');
   if (!generationOptions.includes(generation)) throw new Error('Please choose a valid generation.');
 
   const birth_date = `${birthYear.padStart(4, '0')}-${birthMonth.padStart(2, '0')}-${birthDay.padStart(2, '0')}`;
-  const parsed = new Date(`${birth_date}T00:00:00`);
-  if (Number.isNaN(parsed.getTime())) throw new Error('Please choose a valid birth date.');
+  if (!isValidDateString(birth_date)) throw new Error('Please choose a valid birth date.');
 
-  return { full_name, birth_date, generation, active: true };
+  if (deceased && !deceased_at) {
+    throw new Error('Please enter a date of passing.');
+  }
+
+  if (deceased_at && !isValidDateString(deceased_at)) {
+    throw new Error('Please enter the passing date as YYYY-MM-DD.');
+  }
+
+  return {
+    full_name,
+    birth_date,
+    generation,
+    active: deceased ? false : active,
+    deceased,
+    deceased_at: deceased ? deceased_at : null,
+    show_in_memorial: deceased ? show_in_memorial : false,
+  };
 }
 
 export async function createPersonAction(formData: FormData) {
