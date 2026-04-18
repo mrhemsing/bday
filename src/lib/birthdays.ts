@@ -21,7 +21,7 @@ function getPacificDateParts(referenceDate = new Date()) {
 
 function getPacificStartOfDay(referenceDate = new Date()) {
   const { year, month, day } = getPacificDateParts(referenceDate);
-  return new Date(year, month - 1, day);
+  return new Date(Date.UTC(year, month - 1, day, 12));
 }
 
 export function getMonthName(monthIndex: number) {
@@ -37,10 +37,10 @@ export function getNextBirthdayDate(birthDate: string, referenceDate = new Date(
   const { month, day } = parseBirthDate(birthDate);
   const { year } = getPacificDateParts(referenceDate);
   const reference = getPacificStartOfDay(referenceDate);
-  let nextBirthday = new Date(year, month - 1, day);
+  let nextBirthday = new Date(Date.UTC(year, month - 1, day, 12));
 
   if (nextBirthday < reference) {
-    nextBirthday = new Date(year + 1, month - 1, day);
+    nextBirthday = new Date(Date.UTC(year + 1, month - 1, day, 12));
   }
 
   return nextBirthday;
