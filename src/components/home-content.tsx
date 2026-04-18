@@ -28,6 +28,7 @@ export function HomeContent({
   const entries = useMemo(() => entriesByMonth[monthIndex] ?? [], [entriesByMonth, monthIndex]);
   const monthName = getMonthName(monthIndex);
   const year = new Date().getFullYear();
+  const isCurrentMonth = monthIndex === initialMonth - 1;
 
   function moveMonth(direction: -1 | 1) {
     setMonthIndex((current) => (current + direction + 12) % 12);
@@ -114,29 +115,31 @@ export function HomeContent({
         </div>
       </SurfaceCard>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <BirthdayList title="Today" description="Birthdays happening today." entries={todayEntries} />
+      {isCurrentMonth ? (
+        <div className="grid gap-6 lg:grid-cols-2">
+          <BirthdayList title="Today" description="Birthdays happening today." entries={todayEntries} />
 
-        {nextUp ? (
-          <SurfaceCard className="p-6">
-            <div className="flex h-full flex-col gap-2 sm:justify-between">
-              <div>
-                <div className="text-sm font-semibold uppercase tracking-[0.3em] text-orange-600">Next up</div>
-                <div className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-slate-950">{nextUp.full_name}</div>
-              </div>
-              <div className="text-base font-medium text-slate-600">
-                {nextUp.ageTurning !== null ? `Turning ${nextUp.ageTurning} • ` : ''}
-                {formatMonthDay(nextUp.birth_date)}
-                <div className="mt-1 font-semibold text-orange-600">
-                  {nextUp.daysUntil === 0 ? 'Today' : nextUp.daysUntil === 1 ? 'Tomorrow' : `In ${nextUp.daysUntil} days`}
+          {nextUp ? (
+            <SurfaceCard className="p-6">
+              <div className="flex h-full flex-col gap-2 sm:justify-between">
+                <div>
+                  <div className="text-sm font-semibold uppercase tracking-[0.3em] text-orange-600">Next up</div>
+                  <div className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-slate-950">{nextUp.full_name}</div>
+                </div>
+                <div className="text-base font-medium text-slate-600">
+                  {nextUp.ageTurning !== null ? `Turning ${nextUp.ageTurning} • ` : ''}
+                  {formatMonthDay(nextUp.birth_date)}
+                  <div className="mt-1 font-semibold text-orange-600">
+                    {nextUp.daysUntil === 0 ? 'Today' : nextUp.daysUntil === 1 ? 'Tomorrow' : `In ${nextUp.daysUntil} days`}
+                  </div>
                 </div>
               </div>
-            </div>
-          </SurfaceCard>
-        ) : (
-          <div className="hidden lg:block" />
-        )}
-      </div>
+            </SurfaceCard>
+          ) : (
+            <div className="hidden lg:block" />
+          )}
+        </div>
+      ) : null}
 
       <BirthdayList title="This Month" description={`All birthdays in ${monthName}.`} entries={entries} mode="month" />
     </div>
