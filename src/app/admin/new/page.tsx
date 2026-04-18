@@ -13,7 +13,7 @@ export default async function NewPersonPage() {
       </section>
 
       <div className="max-w-3xl">
-        <PersonForm action={createPersonAction} submitLabel="Save person" cancelHref="/admin" />
+        <PersonForm action={createPersonAction} submitLabel="Save member" cancelHref="/admin" />
       </div>
     </AppShell>
   );
