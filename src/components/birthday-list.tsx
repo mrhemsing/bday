@@ -21,23 +21,36 @@ export function BirthdayList({
   description,
   entries,
   mode = 'upcoming',
+  viewedMonth,
 }: {
   title: string;
   description: string;
   entries: BirthdayEntry[];
   mode?: 'upcoming' | 'month';
+  viewedMonth?: number;
 }) {
   const showCount = entries.length > 0;
   const today = new Date();
   const currentMonth = today.getMonth() + 1;
   const currentDay = today.getDate();
+  const effectiveMonth = viewedMonth ?? currentMonth;
+  const isPastViewedMonth = effectiveMonth < currentMonth;
+  const isFutureViewedMonth = effectiveMonth > currentMonth;
   const upcomingEntries = mode === 'month'
-    ? entries.filter((entry) => entry.month !== currentMonth || entry.day >= currentDay)
+    ? isPastViewedMonth
+      ? []
+      : isFutureViewedMonth
+        ? entries
+        : entries.filter((entry) => entry.day >= currentDay)
     : entries;
   const pastEntries = mode === 'month'
-    ? entries
-        .filter((entry) => entry.month === currentMonth && entry.day < currentDay)
-        .sort((a, b) => b.day - a.day)
+    ? isPastViewedMonth
+      ? [...entries].sort((a, b) => b.day - a.day)
+      : isFutureViewedMonth
+        ? []
+        : entries
+            .filter((entry) => entry.day < currentDay)
+            .sort((a, b) => b.day - a.day)
     : [];
   const titleClassName = title === 'Today' ? 'text-slate-950' : title === 'This Month' ? 'text-slate-800' : 'text-slate-900';
   const descriptionClassName = title === 'This Month' ? 'text-slate-400' : 'text-slate-500';
