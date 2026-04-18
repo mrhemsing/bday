@@ -68,7 +68,7 @@ export function HomeContent({
     >
       <SurfaceCard className="p-8">
         <div className="max-w-2xl">
-          <div className="mt-5">
+          <div className="mt-0 sm:mt-5">
             <div className="month-header-nudge text-left text-4xl font-semibold tracking-[-0.03em] text-slate-950 sm:hidden">
               {monthName} {year}
             </div>
