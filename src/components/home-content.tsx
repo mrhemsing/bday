@@ -136,7 +136,7 @@ export function HomeContent({
                 </div>
                 <div className="text-base font-medium text-slate-600">
                   {nextUp.ageTurning !== null ? `Turning ${nextUp.ageTurning} on ` : ''}
-                  {formatWeekdayMonthDay(nextUp.birth_date)}
+                  {formatWeekdayMonthDay(nextUp.nextBirthday)}
                   <div className="mt-1 font-semibold text-orange-600">
                     {nextUp.daysUntil === 0 ? 'Today' : nextUp.daysUntil === 1 ? 'Tomorrow' : `In ${nextUp.daysUntil} days`}
                   </div>
@@ -156,7 +156,7 @@ export function HomeContent({
                 </div>
                 <div className="text-base font-medium text-slate-600">
                   {nextUp.ageTurning !== null ? `Turning ${nextUp.ageTurning} on ` : ''}
-                  {formatWeekdayMonthDay(nextUp.birth_date)}
+                  {formatWeekdayMonthDay(nextUp.nextBirthday)}
                   <div className="mt-1 font-semibold text-orange-600">
                     {nextUp.daysUntil === 0 ? 'Today' : nextUp.daysUntil === 1 ? 'Tomorrow' : `In ${nextUp.daysUntil} days`}
                   </div>
