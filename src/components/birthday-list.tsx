@@ -28,6 +28,8 @@ export function BirthdayList({
   memorialEntries = [],
   mode = 'upcoming',
   viewedMonth,
+  currentMonth,
+  currentDay,
 }: {
   title: string;
   description: string;
@@ -35,20 +37,21 @@ export function BirthdayList({
   memorialEntries?: BirthdayEntry[];
   mode?: 'upcoming' | 'month';
   viewedMonth?: number;
+  currentMonth?: number;
+  currentDay?: number;
 }) {
   const showCount = entries.length > 0;
-  const today = new Date();
-  const currentMonth = today.getMonth() + 1;
-  const currentDay = today.getDate();
-  const effectiveMonth = viewedMonth ?? currentMonth;
-  const isPastViewedMonth = effectiveMonth < currentMonth;
-  const isFutureViewedMonth = effectiveMonth > currentMonth;
+  const resolvedCurrentMonth = currentMonth ?? new Date().getMonth() + 1;
+  const resolvedCurrentDay = currentDay ?? new Date().getDate();
+  const effectiveMonth = viewedMonth ?? resolvedCurrentMonth;
+  const isPastViewedMonth = effectiveMonth < resolvedCurrentMonth;
+  const isFutureViewedMonth = effectiveMonth > resolvedCurrentMonth;
   const upcomingEntries = mode === 'month'
     ? isPastViewedMonth
       ? []
       : isFutureViewedMonth
         ? entries
-        : entries.filter((entry) => entry.day >= currentDay)
+        : entries.filter((entry) => entry.day >= resolvedCurrentDay)
     : entries;
   const pastEntries = mode === 'month'
     ? isPastViewedMonth
@@ -56,7 +59,7 @@ export function BirthdayList({
       : isFutureViewedMonth
         ? []
         : entries
-            .filter((entry) => entry.day < currentDay)
+            .filter((entry) => entry.day < resolvedCurrentDay)
             .sort((a, b) => b.day - a.day)
     : [];
   const titleClassName = title === 'Today' ? 'text-slate-950' : title === 'This Month' ? 'text-slate-800' : 'text-slate-900';
@@ -87,6 +90,8 @@ export function BirthdayList({
               entries={upcomingEntries}
               emptyMessage="No upcoming birthdays this month."
               mode={mode}
+              currentMonth={resolvedCurrentMonth}
+              currentDay={resolvedCurrentDay}
             />
           ) : null}
           {pastEntries.length > 0 ? (
@@ -97,12 +102,14 @@ export function BirthdayList({
               entries={pastEntries}
               emptyMessage="No past birthdays this month."
               mode={mode}
+              currentMonth={resolvedCurrentMonth}
+              currentDay={resolvedCurrentDay}
             />
           ) : null}
           {memorialEntries.length > 0 ? <MemorialSection entries={memorialEntries} /> : null}
         </div>
       ) : (
-        <BirthdayEntries entries={entries} mode={mode} />
+        <BirthdayEntries entries={entries} mode={mode} currentMonth={resolvedCurrentMonth} currentDay={resolvedCurrentDay} />
       )}
     </SurfaceCard>
   );
@@ -115,6 +122,8 @@ function BirthdaySection({
   entries,
   emptyMessage,
   mode,
+  currentMonth,
+  currentDay,
 }: {
   label: string;
   labelClassName: string;
@@ -122,6 +131,8 @@ function BirthdaySection({
   entries: BirthdayEntry[];
   emptyMessage: string;
   mode: 'upcoming' | 'month';
+  currentMonth: number;
+  currentDay: number;
 }) {
   return (
     <div className={containerClassName}>
@@ -131,20 +142,28 @@ function BirthdaySection({
           {emptyMessage}
         </div>
       ) : (
-        <BirthdayEntries entries={entries} mode={mode} />
+        <BirthdayEntries entries={entries} mode={mode} currentMonth={currentMonth} currentDay={currentDay} />
       )}
     </div>
   );
 }
 
-function BirthdayEntries({ entries, mode }: { entries: BirthdayEntry[]; mode: 'upcoming' | 'month' }) {
+function BirthdayEntries({
+  entries,
+  mode,
+  currentMonth,
+  currentDay,
+}: {
+  entries: BirthdayEntry[];
+  mode: 'upcoming' | 'month';
+  currentMonth: number;
+  currentDay: number;
+}) {
   return (
     <div className="space-y-5">
       {entries.map((entry) => {
         const isMonthMode = mode === 'month';
-        const now = new Date();
-        const entryDateThisYear = new Date(now.getFullYear(), entry.month - 1, entry.day);
-        const hasPassedThisYear = entryDateThisYear < new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const hasPassedThisYear = entry.month < currentMonth || (entry.month === currentMonth && entry.day < currentDay);
         const relativeLabel = entry.daysUntil === 0 ? 'Today' : entry.daysUntil === 1 ? 'Tomorrow' : `In ${entry.daysUntil} days`;
         const ageLabel = entry.ageTurning !== null ? `Turning ${entry.ageTurning}` : null;
         const monthModeLabel =
@@ -193,7 +212,7 @@ function BirthdayEntries({ entries, mode }: { entries: BirthdayEntry[]; mode: 'u
 
 function MemorialSection({ entries }: { entries: BirthdayEntry[] }) {
   return (
-    <div className="rounded-[1.75rem] border border-slate-200 p-4" style={{ backgroundColor: '#E2E8F0' }}>
+    <div className="rounded-[1.75rem] border border-slate-200 p-4" style={{ backgroundColor: '#F5F3FF' }}>
       <div className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">In Loving Memory</div>
       <div className="space-y-4">
         {entries.map((entry) => (

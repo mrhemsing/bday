@@ -31,6 +31,9 @@ export function HomeContent({
   const memorialEntries = useMemo(() => memorialEntriesByMonth[monthIndex] ?? [], [memorialEntriesByMonth, monthIndex]);
   const monthName = getMonthName(monthIndex);
   const year = new Date().getFullYear();
+  const today = new Date();
+  const currentMonth = initialMonth;
+  const currentDay = today.getDate();
   const isCurrentMonth = monthIndex === initialMonth - 1;
 
   function moveMonth(direction: -1 | 1) {
@@ -102,7 +105,7 @@ export function HomeContent({
       {isCurrentMonth && (todayEntries.length > 0 || nextUp) ? (
         <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
           {todayEntries.length > 0 ? (
-            <BirthdayList title="Today" description="" entries={todayEntries} />
+            <BirthdayList title="Today" description="" entries={todayEntries} currentMonth={currentMonth} currentDay={currentDay} />
           ) : nextUp ? (
             <SurfaceCard className="bg-orange-50 p-6 lg:col-start-1">
               <div className="flex h-full flex-col gap-2 items-start text-left sm:justify-between">
@@ -145,7 +148,7 @@ export function HomeContent({
         </div>
       ) : null}
 
-      <BirthdayList title="This Month" description={`All birthdays in ${monthName}.`} entries={entries} memorialEntries={memorialEntries} mode="month" viewedMonth={monthIndex + 1} />
+      <BirthdayList title="This Month" description={`All birthdays in ${monthName}.`} entries={entries} memorialEntries={memorialEntries} mode="month" viewedMonth={monthIndex + 1} currentMonth={currentMonth} currentDay={currentDay} />
     </div>
   );
 }
