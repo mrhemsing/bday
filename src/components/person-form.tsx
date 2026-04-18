@@ -2,6 +2,10 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+
+function normalizeNameInput(value: string) {
+  return value.replace(/(^|[\s-'])([a-z])/g, (_, prefix: string, char: string) => `${prefix}${char.toUpperCase()}`);
+}
 import { generationOptions, type Person } from '@/lib/types';
 import { SurfaceCard } from './cards';
 import { BirthdayWheelPicker } from './birthday-wheel-picker';
@@ -23,6 +27,7 @@ export function PersonForm({
   cancelHref?: string;
 }) {
   const initialBirthDate = splitBirthDate(person?.birth_date);
+  const [fullName, setFullName] = useState(person?.full_name ?? '');
   const [birthDate, setBirthDate] = useState({
     month: initialBirthDate.month || '01',
     day: initialBirthDate.day || '01',
@@ -35,10 +40,12 @@ export function PersonForm({
         <input
           id="full_name"
           name="full_name"
-          defaultValue={person?.full_name ?? ''}
+          value={fullName}
+          onChange={(event) => setFullName(normalizeNameInput(event.target.value))}
           placeholder="Full name"
+          autoCapitalize="words"
           required
-          className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none ring-0 transition focus:border-violet-300"
+          className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none ring-0 transition focus:border-[color:var(--primary)]"
         />
 
         <div className="space-y-2">
@@ -53,7 +60,7 @@ export function PersonForm({
             id="generation"
             name="generation"
             defaultValue={person?.generation ?? ''}
-            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none ring-0 transition focus:border-violet-300"
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 pr-[41px] text-slate-900 outline-none ring-0 transition focus:border-[color:var(--primary)]"
             required
           >
             <option value="" disabled>
@@ -78,7 +85,7 @@ export function PersonForm({
           ) : null}
           <button
             type="submit"
-            className="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
+            className="rounded-full bg-[color:var(--primary)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[color:var(--primary-hover)]"
           >
             {submitLabel}
           </button>

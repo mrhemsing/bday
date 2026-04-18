@@ -4,16 +4,16 @@ import { SwipeableAdminRow } from './swipeable-admin-row';
 
 export function AdminTable({ people }: { people: Person[] }) {
   return (
-    <SurfaceCard className="overflow-hidden">
+    <div>
       {people.length === 0 ? (
-        <div className="px-6 py-10 text-sm text-slate-500">No family members match this view yet.</div>
+        <SurfaceCard className="px-6 py-10 text-sm text-slate-500">No family members match this view yet.</SurfaceCard>
       ) : (
-        <div className="bg-white/70">
+        <div className="space-y-3">
           {people.map((person) => (
             <SwipeableAdminRow key={person.id} person={person} />
           ))}
         </div>
       )}
-    </SurfaceCard>
+    </div>
   );
 }

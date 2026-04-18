@@ -1,4 +1,3 @@
-import { cache } from 'react';
 import type { Generation, Person } from './types';
 import { hasSupabaseEnv } from './env';
 import { createSupabaseAdminClient } from './supabase/server';
@@ -63,7 +62,7 @@ export interface PersonInput {
   active?: boolean;
 }
 
-export const getPeople = cache(async (options?: { includeInactive?: boolean; query?: string }) => {
+export async function getPeople(options?: { includeInactive?: boolean; query?: string }) {
   if (!hasSupabaseEnv()) {
     return samplePeople
       .filter((person) => options?.includeInactive || person.active)
@@ -89,7 +88,7 @@ export const getPeople = cache(async (options?: { includeInactive?: boolean; que
   }
 
   return (data ?? []) as Person[];
-});
+}
 
 export async function getPersonById(id: string) {
   if (!hasSupabaseEnv()) {

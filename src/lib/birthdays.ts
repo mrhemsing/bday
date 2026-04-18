@@ -1,5 +1,9 @@
 import type { BirthdayBuckets, BirthdayEntry, BirthdayStats, Person } from './types';
 
+export function getMonthName(monthIndex: number) {
+  return new Intl.DateTimeFormat('en-US', { month: 'long' }).format(new Date(2026, monthIndex, 1));
+}
+
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
 
 function startOfDay(date: Date) {
@@ -101,4 +105,12 @@ export function formatMonthDay(dateString: string) {
     month: 'long',
     day: 'numeric',
   }).format(new Date(`${dateString}T00:00:00`));
+}
+
+export function getBirthdaysForMonth(people: Person[], month: number, referenceDate = new Date()) {
+  return people
+    .filter((person) => person.active)
+    .map((person) => toBirthdayEntry(person, referenceDate))
+    .filter((entry) => entry.month === month)
+    .sort((a, b) => a.day - b.day || a.full_name.localeCompare(b.full_name));
 }

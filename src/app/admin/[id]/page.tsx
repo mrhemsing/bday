@@ -12,8 +12,7 @@ export default async function EditPersonPage({ params }: { params: Promise<{ id:
   return (
     <AppShell>
       <section className="mb-8 max-w-3xl">
-        <p className="text-sm font-semibold uppercase tracking-[0.24em] text-violet-600">Edit person</p>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">Update birthday details</h1>
+        <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Update birthday details</h1>
         <p className="mt-3 text-sm leading-7 text-slate-500">
           Edit details or permanently delete if this record should be removed.
         </p>
