@@ -71,36 +71,32 @@ export function HomeContent({
       onTouchEnd={handleTouchEnd}
       onTouchCancel={handleTouchCancel}
     >
-      <SurfaceCard className="p-8">
-        <div className="max-w-2xl">
-          <div className="mt-0 sm:mt-5">
-            <div className="month-header-nudge text-left text-4xl font-semibold tracking-[-0.03em] text-slate-950 sm:hidden">
-              {monthName} {year}
-            </div>
-            <div className="mt-4 hidden items-center gap-3 sm:flex">
-              <button
-                type="button"
-                onClick={() => moveMonth(-1)}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-lg font-medium text-slate-500 transition hover:text-slate-900"
-                aria-label="Previous month"
-              >
-                ←
-              </button>
-              <div className="text-left text-4xl font-semibold tracking-[-0.03em] text-slate-950">
-                {monthName} {year}
-              </div>
-              <button
-                type="button"
-                onClick={() => moveMonth(1)}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-lg font-medium text-slate-500 transition hover:text-slate-900"
-                aria-label="Next month"
-              >
-                →
-              </button>
-            </div>
-          </div>
+      <div className="mt-0 sm:mt-5">
+        <div className="month-header-nudge text-left text-4xl font-semibold tracking-[-0.03em] text-slate-950 sm:hidden">
+          {monthName} {year}
         </div>
-      </SurfaceCard>
+        <div className="mt-4 hidden items-center gap-3 sm:flex">
+          <button
+            type="button"
+            onClick={() => moveMonth(-1)}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-lg font-medium text-slate-500 transition hover:text-slate-900"
+            aria-label="Previous month"
+          >
+            ←
+          </button>
+          <div className="text-left text-4xl font-semibold tracking-[-0.03em] text-slate-950">
+            {monthName} {year}
+          </div>
+          <button
+            type="button"
+            onClick={() => moveMonth(1)}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-lg font-medium text-slate-500 transition hover:text-slate-900"
+            aria-label="Next month"
+          >
+            →
+          </button>
+        </div>
+      </div>
 
       {isCurrentMonth && (todayEntries.length > 0 || nextUp) ? (
         <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
