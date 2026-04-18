@@ -16,7 +16,7 @@ export default async function HomePage() {
   const memorialEntriesByMonth = Array.from({ length: 12 }, (_, index) => getMemorialBirthdaysForMonth(people, index + 1));
 
   return (
-    <AppShell>
+    <AppShell memberCount={stats.totalActive}>
       <HomeContent
         totalMembers={stats.totalActive}
         entriesByMonth={entriesByMonth}

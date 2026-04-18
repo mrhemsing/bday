@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { BAverageBadge } from '@/components/b-average-badge';
 import { cn } from '@/lib/utils';
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+export function AppShell({ children, memberCount }: { children: React.ReactNode; memberCount?: number }) {
   const pathname = usePathname();
   return (
     <div className="min-h-screen">
@@ -16,7 +16,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               Hemsing Family Birthday Calendar
             </Link>
             <p className="mt-1 text-[1.02rem] text-slate-500 sm:text-[1.29rem]">Because 22 kids turns into a lot of cake! 🎂</p>
-            <p className="mt-1 text-sm text-slate-500">(DB count: 87 members)</p>
+            {typeof memberCount === 'number' ? <p className="mt-1 text-sm text-slate-500">(DB count: {memberCount} members)</p> : null}
           </div>
           <nav className="flex w-full items-center gap-2 rounded-full border border-[color:var(--border)] bg-[#E2E8F0] p-1 text-sm text-[#64748B] shadow-[0_1px_2px_rgba(15,23,42,0.04)] lg:w-auto">
             <NavLink href="/" active={pathname === '/'}>Upcoming</NavLink>
