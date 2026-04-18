@@ -35,7 +35,9 @@ export function BirthdayList({
     ? entries.filter((entry) => entry.month !== currentMonth || entry.day >= currentDay)
     : entries;
   const pastEntries = mode === 'month'
-    ? entries.filter((entry) => entry.month === currentMonth && entry.day < currentDay)
+    ? entries
+        .filter((entry) => entry.month === currentMonth && entry.day < currentDay)
+        .sort((a, b) => b.day - a.day)
     : [];
   const titleClassName = title === 'Today' ? 'text-slate-950' : title === 'This Month' ? 'text-slate-800' : 'text-slate-900';
   const descriptionClassName = title === 'This Month' ? 'text-slate-400' : 'text-slate-500';
