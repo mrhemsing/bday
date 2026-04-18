@@ -101,7 +101,7 @@ export function HomeContent({
           <BirthdayList title="Today" description="Birthdays happening today." entries={todayEntries} />
 
           {nextUp ? (
-            <SurfaceCard className="p-6">
+            <SurfaceCard className="bg-orange-50 p-6">
               <div className="flex h-full flex-col gap-2 sm:justify-between">
                 <div>
                   <div className="text-sm font-semibold uppercase tracking-[0.3em] text-orange-600">Next up</div>
