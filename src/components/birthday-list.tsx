@@ -152,8 +152,8 @@ function BirthdayEntries({ entries, mode }: { entries: BirthdayEntry[]; mode: 'u
             </p>
 
             <div className="relative z-10 mt-3 flex flex-wrap items-center gap-2 text-base text-slate-500">
-              <span>{formatMonthDay(entry.birth_date)}</span>
-              <span>•</span>
+              {!isMonthMode ? <span>{formatMonthDay(entry.birth_date)}</span> : null}
+              {!isMonthMode ? <span>•</span> : null}
               <span
                 className={`inline-flex items-center rounded-full border px-2.5 py-1 text-sm font-medium ${generationBadgeStyles[entry.generation]}`}
               >
