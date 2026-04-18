@@ -65,8 +65,8 @@ export function HomeContent({
     >
       <SurfaceCard className="p-8">
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[color:var(--primary)]">Upcoming family birthdays</p>
-          <p className="mt-1 text-sm text-slate-500">({totalMembers} members)</p>
+          <p className="text-sm text-slate-500">({totalMembers} members)</p>
+          <p className="mt-1 text-sm font-semibold uppercase tracking-[0.24em] text-[color:var(--primary)]">Upcoming family birthdays</p>
           <div className="mt-5">
             <div className="month-header-nudge text-left text-4xl font-semibold tracking-[-0.03em] text-slate-950 sm:hidden">
               {monthName} {year}
