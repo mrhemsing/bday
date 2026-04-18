@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { BirthdayList } from '@/components/birthday-list';
 import { SurfaceCard } from '@/components/cards';
-import { formatMonthDay, getMonthName } from '@/lib/birthdays';
+import { formatWeekdayMonthDay, getMonthName } from '@/lib/birthdays';
 import type { BirthdayEntry } from '@/lib/types';
 
 const SWIPE_THRESHOLD = 42;
@@ -135,8 +135,8 @@ export function HomeContent({
                   <div className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-slate-950">{nextUp.full_name}</div>
                 </div>
                 <div className="text-base font-medium text-slate-600">
-                  {nextUp.ageTurning !== null ? `Turning ${nextUp.ageTurning} • ` : ''}
-                  {formatMonthDay(nextUp.birth_date)}
+                  {nextUp.ageTurning !== null ? `Turning ${nextUp.ageTurning} on ` : ''}
+                  {formatWeekdayMonthDay(nextUp.birth_date)}
                   <div className="mt-1 font-semibold text-orange-600">
                     {nextUp.daysUntil === 0 ? 'Today' : nextUp.daysUntil === 1 ? 'Tomorrow' : `In ${nextUp.daysUntil} days`}
                   </div>
@@ -155,8 +155,8 @@ export function HomeContent({
                   <div className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-slate-950">{nextUp.full_name}</div>
                 </div>
                 <div className="text-base font-medium text-slate-600">
-                  {nextUp.ageTurning !== null ? `Turning ${nextUp.ageTurning} • ` : ''}
-                  {formatMonthDay(nextUp.birth_date)}
+                  {nextUp.ageTurning !== null ? `Turning ${nextUp.ageTurning} on ` : ''}
+                  {formatWeekdayMonthDay(nextUp.birth_date)}
                   <div className="mt-1 font-semibold text-orange-600">
                     {nextUp.daysUntil === 0 ? 'Today' : nextUp.daysUntil === 1 ? 'Tomorrow' : `In ${nextUp.daysUntil} days`}
                   </div>

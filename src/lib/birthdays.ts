@@ -133,6 +133,14 @@ export function formatMonthDay(dateString: string) {
   }).format(new Date(`${dateString}T00:00:00`));
 }
 
+export function formatWeekdayMonthDay(dateString: string) {
+  return new Intl.DateTimeFormat('en-US', {
+    weekday: 'short',
+    month: 'long',
+    day: 'numeric',
+  }).format(new Date(`${dateString}T00:00:00`));
+}
+
 export function getBirthdaysForMonth(people: Person[], month: number, referenceDate = new Date()) {
   return people
     .filter((person) => !person.deceased)
