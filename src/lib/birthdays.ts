@@ -137,7 +137,7 @@ export function formatWeekdayMonthDay(date: Date) {
   const safeDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12);
 
   return new Intl.DateTimeFormat('en-US', {
-    weekday: 'short',
+    weekday: 'long',
     month: 'long',
     day: 'numeric',
     timeZone: PACIFIC_TIME_ZONE,
