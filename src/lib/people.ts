@@ -138,7 +138,7 @@ export async function createPerson(input: PersonInput) {
     order_number: input.order_number ?? null,
     deceased: input.deceased ?? false,
     deceased_at: input.deceased ? input.deceased_at ?? null : null,
-    show_in_memorial: input.deceased ? input.show_in_memorial ?? true : false,
+    show_in_memorial: input.deceased ?? false,
   };
 
   const { error } = await supabase.from('people').insert(payload);
@@ -158,7 +158,7 @@ export async function updatePerson(id: string, input: PersonInput) {
     order_number: input.order_number ?? null,
     deceased: input.deceased ?? false,
     deceased_at: input.deceased ? input.deceased_at ?? null : null,
-    show_in_memorial: input.deceased ? input.show_in_memorial ?? true : false,
+    show_in_memorial: input.deceased ?? false,
   };
 
   const { error } = await supabase.from('people').update(payload).eq('id', id);

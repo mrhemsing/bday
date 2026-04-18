@@ -26,7 +26,6 @@ function validatePersonForm(formData: FormData) {
   const order_number_raw = readString(formData, 'order_number');
   const deceased = formData.get('deceased') === 'on';
   const deceased_at = readString(formData, 'deceased_at');
-  const show_in_memorial = formData.get('show_in_memorial') === 'on';
 
   if (!full_name) throw new Error('Please enter a full name.');
   if (!birthYear || !birthMonth || !birthDay) throw new Error('Please choose a complete birth date.');
@@ -56,7 +55,7 @@ function validatePersonForm(formData: FormData) {
     order_number,
     deceased,
     deceased_at: deceased ? deceased_at : null,
-    show_in_memorial: deceased ? show_in_memorial : false,
+    show_in_memorial: deceased,
   };
 }
 

@@ -30,7 +30,6 @@ export function PersonForm({
   const [fullName, setFullName] = useState(person?.full_name ?? '');
   const [orderNumber, setOrderNumber] = useState(person?.order_number?.toString() ?? '');
   const [isDeceased, setIsDeceased] = useState(person?.deceased ?? false);
-  const [showInMemorial, setShowInMemorial] = useState(person?.show_in_memorial ?? false);
   const [deceasedAt, setDeceasedAt] = useState(person?.deceased_at ?? '');
   const [birthDate, setBirthDate] = useState({
     month: initialBirthDate.month || '01',
@@ -100,11 +99,8 @@ export function PersonForm({
               onChange={(event) => {
                 const checked = event.target.checked;
                 setIsDeceased(checked);
-                if (checked) {
-                  setShowInMemorial(true);
-                } else {
+                if (!checked) {
                   setDeceasedAt('');
-                  setShowInMemorial(false);
                 }
               }}
               className="h-4 w-4 rounded border-slate-300 text-[color:var(--primary)] focus:ring-[color:var(--primary)]"
@@ -128,17 +124,6 @@ export function PersonForm({
                 required={isDeceased}
               />
             </Field>
-
-            <label className="flex items-center gap-3 text-sm font-medium text-slate-700">
-              <input
-                type="checkbox"
-                name="show_in_memorial"
-                checked={showInMemorial}
-                onChange={(event) => setShowInMemorial(event.target.checked)}
-                className="h-4 w-4 rounded border-slate-300 text-[color:var(--primary)] focus:ring-[color:var(--primary)]"
-              />
-              <span>Show in memorial section</span>
-            </label>
           </div>
         ) : null}
 
