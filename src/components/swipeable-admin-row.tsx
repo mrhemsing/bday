@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { useRef, useState, useTransition } from 'react';
-import { useRouter } from 'next/navigation';
 import { deletePersonAction } from '@/app/actions';
 import { formatBirthday } from '@/lib/birthdays';
 import type { Generation, Person } from '@/lib/types';
@@ -24,7 +23,6 @@ export function SwipeableAdminRow({ person }: { person: Person }) {
   const startXRef = useRef<number | null>(null);
   const baseXRef = useRef(0);
   const hasMovedRef = useRef(false);
-  const router = useRouter();
 
   function clamp(value: number) {
     return Math.max(-REVEAL_WIDTH, Math.min(0, value));
@@ -51,11 +49,6 @@ export function SwipeableAdminRow({ person }: { person: Person }) {
     setDragging(false);
     setTranslateX((current) => (current <= -REVEAL_WIDTH / 2 ? -REVEAL_WIDTH : 0));
     startXRef.current = null;
-  }
-
-  function handleRowClick() {
-    if (dragging || hasMovedRef.current) return;
-    router.push(`/admin/${person.id}`);
   }
 
   function handleDelete() {
@@ -89,7 +82,6 @@ export function SwipeableAdminRow({ person }: { person: Person }) {
         onPointerMove={handlePointerMove}
         onPointerUp={finishGesture}
         onPointerCancel={finishGesture}
-        onClick={handleRowClick}
       >
         <div className="flex items-center justify-between gap-3 px-4 py-4 sm:px-5 sm:py-5">
           <div className="min-w-0 flex-1">
