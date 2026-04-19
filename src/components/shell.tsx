@@ -13,9 +13,9 @@ export function AppShell({ children, memberCount }: { children: React.ReactNode;
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-5 lg:flex-row lg:items-center lg:justify-between lg:px-8">
           <div>
             <Link href="/" className="text-[1.95rem] font-semibold leading-[1.12] tracking-tight text-slate-900 sm:text-[2.15rem] sm:leading-tight">
-              Hemsing Birthdays
+              <span className="mr-1 text-[1.15em]">🎂</span>Hemsing Birthdays
             </Link>
-            <p className="mt-1 text-[1.14rem] text-slate-500 sm:text-[1.29rem]">Because 22 kids turns into a lot of cake! 🎂</p>
+            <p className="mt-1 text-[1.14rem] text-slate-500 sm:text-[1.29rem]">Because 22 kids turns into a lot of cake!</p>
           </div>
           <nav className="flex w-full items-center gap-2 rounded-full border border-[color:var(--border)] bg-[#E2E8F0] p-1 text-sm text-[#64748B] shadow-[0_1px_2px_rgba(15,23,42,0.04)] lg:w-auto">
             <NavLink href="/" active={pathname === '/'}>Upcoming</NavLink>
