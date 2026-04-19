@@ -26,6 +26,10 @@ function formatDateInput(value: string) {
   return `${year}-${month}-${day}`;
 }
 
+function isCompleteDateInput(value: string) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
+
 export function PersonForm({
   action,
   person,
@@ -42,6 +46,7 @@ export function PersonForm({
   const [orderNumber, setOrderNumber] = useState(person?.order_number?.toString() ?? '');
   const [isDeceased, setIsDeceased] = useState(person?.deceased ?? false);
   const [deceasedAt, setDeceasedAt] = useState(person?.deceased_at ?? '');
+  const [formError, setFormError] = useState('');
   const [birthDate, setBirthDate] = useState({
     month: initialBirthDate.month || '01',
     day: initialBirthDate.day || '01',
@@ -50,7 +55,19 @@ export function PersonForm({
 
   return (
     <SurfaceCard className="p-6 sm:p-8">
-      <form action={action} className="space-y-6">
+      <form
+        action={action}
+        className="space-y-6"
+        onSubmit={(event) => {
+          if (isDeceased && !isCompleteDateInput(deceasedAt)) {
+            event.preventDefault();
+            setFormError('Please enter the passing date as YYYY-MM-DD.');
+            return;
+          }
+
+          setFormError('');
+        }}
+      >
         <input
           id="full_name"
           name="full_name"
@@ -130,7 +147,10 @@ export function PersonForm({
                 inputMode="numeric"
                 placeholder="YYYY-MM-DD"
                 value={deceasedAt}
-                onChange={(event) => setDeceasedAt(formatDateInput(event.target.value))}
+                onChange={(event) => {
+                  setDeceasedAt(formatDateInput(event.target.value));
+                  if (formError) setFormError('');
+                }}
                 className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none ring-0 transition focus:border-[color:var(--primary)]"
                 maxLength={10}
                 required={isDeceased}
@@ -138,6 +158,8 @@ export function PersonForm({
             </Field>
           </div>
         ) : null}
+
+        {formError ? <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{formError}</div> : null}
 
         <div className="flex items-center justify-end gap-3">
           {cancelHref ? (
