@@ -13,7 +13,7 @@ export function AppShell({ children, memberCount }: { children: React.ReactNode;
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-5 lg:flex-row lg:items-center lg:justify-between lg:px-8">
           <div>
             <Link href="/" className="text-[1.95rem] font-semibold leading-[1.12] tracking-tight text-slate-900 sm:text-[2.15rem] sm:leading-tight">
-              <span className="mr-1 text-[1.15em]">🎂</span>Hemsing Birthdays
+              <span className="relative -top-[0.04em] mr-1 text-[1.15em]">🎂</span>Hemsing Birthdays
             </Link>
             <p className="mt-1 text-[1.14rem] text-slate-500 sm:text-[1.29rem]">Because 22 kids turns into a lot of cake!</p>
           </div>
