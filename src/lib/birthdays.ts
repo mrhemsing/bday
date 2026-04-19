@@ -89,19 +89,9 @@ export function getUpcomingBirthdays(people: Person[], referenceDate = new Date(
 export function getMemorialBirthdaysForMonth(people: Person[], month: number, referenceDate = new Date()) {
   return people
     .filter((person) => person.deceased && person.show_in_memorial)
-    .map((person) => {
-      const entry = toBirthdayEntry(person, referenceDate);
-      const memorialMonth = person.deceased_at ? parseBirthDate(person.deceased_at).month : entry.month;
-      const memorialDay = person.deceased_at ? parseBirthDate(person.deceased_at).day : entry.day;
-
-      return {
-        ...entry,
-        memorialMonth,
-        memorialDay,
-      };
-    })
-    .filter((entry) => entry.memorialMonth === month)
-    .sort((a, b) => a.memorialDay - b.memorialDay || a.full_name.localeCompare(b.full_name));
+    .map((person) => toBirthdayEntry(person, referenceDate))
+    .filter((entry) => entry.month === month)
+    .sort((a, b) => a.day - b.day || a.full_name.localeCompare(b.full_name));
 }
 
 export function groupBirthdays(people: Person[], referenceDate = new Date()): BirthdayBuckets {
