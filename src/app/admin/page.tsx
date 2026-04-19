@@ -46,6 +46,8 @@ export default async function AdminPage({
         <AdminSearch initialQuery={query} initialGeneration={generation as '' | 'child' | 'grandchild' | 'great-grandchild' | 'other'} generationPlaceholder="All generations" />
       </SurfaceCard>
 
+      <div className="mb-4 text-sm font-medium text-slate-500">{people.length} member{people.length === 1 ? '' : 's'}</div>
+
       <AdminTable people={people} emptyMessage={generation ? emptyMessagesByGeneration[generation as keyof typeof emptyMessagesByGeneration] : 'No family members match this view yet.'} />
     </AppShell>
   );
