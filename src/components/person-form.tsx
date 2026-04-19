@@ -15,6 +15,17 @@ function splitBirthDate(value?: string) {
   return { year, month, day };
 }
 
+function formatDateInput(value: string) {
+  const digits = value.replace(/\D/g, '').slice(0, 8);
+  const year = digits.slice(0, 4);
+  const month = digits.slice(4, 6);
+  const day = digits.slice(6, 8);
+
+  if (digits.length <= 4) return year;
+  if (digits.length <= 6) return `${year}-${month}`;
+  return `${year}-${month}-${day}`;
+}
+
 export function PersonForm({
   action,
   person,
@@ -119,8 +130,9 @@ export function PersonForm({
                 inputMode="numeric"
                 placeholder="YYYY-MM-DD"
                 value={deceasedAt}
-                onChange={(event) => setDeceasedAt(event.target.value)}
+                onChange={(event) => setDeceasedAt(formatDateInput(event.target.value))}
                 className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none ring-0 transition focus:border-[color:var(--primary)]"
+                maxLength={10}
                 required={isDeceased}
               />
             </Field>
