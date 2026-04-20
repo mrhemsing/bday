@@ -2,12 +2,13 @@ import { AppShell } from '@/components/shell';
 import { PersonForm } from '@/components/person-form';
 import { deletePersonAction, updatePersonAction } from '@/app/actions';
 import { requireAdminSession } from '@/lib/auth';
-import { getPersonById } from '@/lib/people';
+import { getPeople, getPersonById } from '@/lib/people';
 
 export default async function EditPersonPage({ params }: { params: Promise<{ id: string }> }) {
   await requireAdminSession();
   const { id } = await params;
   const person = await getPersonById(id);
+  const parentOptions = await getPeople({ generation: 'child' });
 
   return (
     <AppShell>
@@ -19,7 +20,7 @@ export default async function EditPersonPage({ params }: { params: Promise<{ id:
       </section>
 
       <div className="max-w-3xl space-y-6">
-        <PersonForm action={updatePersonAction.bind(null, id)} person={person} submitLabel="Save changes" cancelHref="/admin" />
+        <PersonForm action={updatePersonAction.bind(null, id)} person={person} parentOptions={parentOptions} submitLabel="Save changes" cancelHref="/admin" />
 
         <div className="flex justify-end rounded-3xl border border-[color:var(--border)] bg-white/85 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.06)]">
           <form action={deletePersonAction.bind(null, id)}>

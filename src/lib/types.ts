@@ -8,6 +8,8 @@ export interface Person {
   birth_date: string;
   generation: Generation;
   order_number: number | null;
+  parent_id: string | null;
+  parent?: Pick<Person, 'id' | 'full_name'> | null;
   notes: string | null;
   deceased: boolean;
   deceased_at: string | null;

@@ -33,17 +33,21 @@ function isCompleteDateInput(value: string) {
 export function PersonForm({
   action,
   person,
+  parentOptions,
   submitLabel,
   cancelHref,
 }: {
   action: (formData: FormData) => void | Promise<void>;
   person?: Person;
+  parentOptions?: Pick<Person, 'id' | 'full_name'>[];
   submitLabel: string;
   cancelHref?: string;
 }) {
   const initialBirthDate = splitBirthDate(person?.birth_date);
   const [fullName, setFullName] = useState(person?.full_name ?? '');
   const [orderNumber, setOrderNumber] = useState(person?.order_number?.toString() ?? '');
+  const [generation, setGeneration] = useState(person?.generation ?? '');
+  const [parentId, setParentId] = useState(person?.parent_id ?? '');
   const [isDeceased, setIsDeceased] = useState(person?.deceased ?? false);
   const [deceasedAt, setDeceasedAt] = useState(person?.deceased_at ?? '');
   const [formError, setFormError] = useState('');
@@ -90,7 +94,14 @@ export function PersonForm({
           <select
             id="generation"
             name="generation"
-            defaultValue={person?.generation ?? ''}
+            value={generation}
+            onChange={(event) => {
+              const value = event.target.value;
+              setGeneration(value);
+              if (value !== 'grandchild') {
+                setParentId('');
+              }
+            }}
             className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 pr-[41px] text-slate-900 outline-none ring-0 transition focus:border-[color:var(--primary)]"
             required
           >
@@ -104,6 +115,25 @@ export function PersonForm({
             ))}
           </select>
         </Field>
+
+        {generation === 'grandchild' ? (
+          <Field htmlFor="parent_id" label="Select parent" optional>
+            <select
+              id="parent_id"
+              name="parent_id"
+              value={parentId}
+              onChange={(event) => setParentId(event.target.value)}
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 pr-[41px] text-slate-900 outline-none ring-0 transition focus:border-[color:var(--primary)]"
+            >
+              <option value="">Select parent</option>
+              {(parentOptions ?? []).map((parent) => (
+                <option key={parent.id} value={parent.id}>
+                  {parent.full_name}
+                </option>
+              ))}
+            </select>
+          </Field>
+        ) : null}
 
         <Field htmlFor="order_number" label="Order number" optional>
           <input

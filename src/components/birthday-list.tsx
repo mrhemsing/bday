@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from 'react';
 import { formatBirthday, formatMonthDay } from '@/lib/birthdays';
 import type { BirthdayEntry, Generation } from '@/lib/types';
 import { SurfaceCard } from './cards';
@@ -159,6 +162,12 @@ function BirthdayEntries({
   currentMonth: number;
   currentDay: number;
 }) {
+  const [expandedParents, setExpandedParents] = useState<Record<string, boolean>>({});
+
+  function toggleParent(id: string) {
+    setExpandedParents((current) => ({ ...current, [id]: !current[id] }));
+  }
+
   return (
     <div className="space-y-5">
       {entries.map((entry) => {
@@ -172,6 +181,9 @@ function BirthdayEntries({
             : entry.ageTurning !== null
               ? `Turning ${entry.ageTurning} on ${formatMonthDay(entry.birth_date)}`
               : formatMonthDay(entry.birth_date);
+
+        const hasParent = entry.generation === 'grandchild' && !!entry.parent?.full_name;
+        const isParentExpanded = !!expandedParents[entry.id];
 
         return (
           <div
@@ -194,13 +206,26 @@ function BirthdayEntries({
             <div className="relative z-10 mt-3 flex flex-wrap items-center gap-2 text-base text-slate-500">
               {!isMonthMode ? <span>{formatMonthDay(entry.birth_date)}</span> : null}
               {!isMonthMode ? <span>•</span> : null}
-              <span
-                className={`inline-flex items-center rounded-full border px-2.5 py-1 text-sm font-medium ${generationBadgeStyles[entry.generation]}`}
-              >
-                {getGenerationLabel(entry)}
-              </span>
+              {hasParent ? (
+                <button
+                  type="button"
+                  onClick={() => toggleParent(entry.id)}
+                  className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-sm font-medium ${generationBadgeStyles[entry.generation]}`}
+                >
+                  <span>{getGenerationLabel(entry)}</span>
+                  <span className={`transition-transform ${isParentExpanded ? 'rotate-90' : ''}`}>▸</span>
+                </button>
+              ) : (
+                <span
+                  className={`inline-flex items-center rounded-full border px-2.5 py-1 text-sm font-medium ${generationBadgeStyles[entry.generation]}`}
+                >
+                  {getGenerationLabel(entry)}
+                </span>
+              )}
               {entry.isToday && !isMonthMode ? <span className="rounded-full bg-orange-500 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-white">Today</span> : null}
             </div>
+
+            {hasParent && isParentExpanded ? <p className="relative z-10 mt-3 text-sm font-medium text-slate-500">{entry.parent?.full_name}</p> : null}
 
             {entry.notes ? <p className="relative z-10 mt-4 text-base leading-7 text-slate-600">{entry.notes}</p> : null}
           </div>

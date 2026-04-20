@@ -2,9 +2,11 @@ import { AppShell } from '@/components/shell';
 import { PersonForm } from '@/components/person-form';
 import { createPersonAction } from '@/app/actions';
 import { requireAdminSession } from '@/lib/auth';
+import { getPeople } from '@/lib/people';
 
 export default async function NewPersonPage() {
   await requireAdminSession();
+  const parentOptions = await getPeople({ generation: 'child' });
 
   return (
     <AppShell>
@@ -13,7 +15,7 @@ export default async function NewPersonPage() {
       </section>
 
       <div className="max-w-3xl">
-        <PersonForm action={createPersonAction} submitLabel="Save member" cancelHref="/admin" />
+        <PersonForm action={createPersonAction} parentOptions={parentOptions} submitLabel="Save member" cancelHref="/admin" />
       </div>
     </AppShell>
   );

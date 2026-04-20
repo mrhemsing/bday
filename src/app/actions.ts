@@ -24,6 +24,7 @@ function validatePersonForm(formData: FormData) {
   const birthDay = readString(formData, 'birth_day');
   const generation = readString(formData, 'generation') as Generation;
   const order_number_raw = readString(formData, 'order_number');
+  const parent_id = readString(formData, 'parent_id');
   const deceased = formData.get('deceased') === 'on';
   const deceased_at = readString(formData, 'deceased_at');
 
@@ -53,6 +54,7 @@ function validatePersonForm(formData: FormData) {
     birth_date,
     generation,
     order_number,
+    parent_id: generation === 'grandchild' && parent_id ? parent_id : null,
     deceased,
     deceased_at: deceased ? deceased_at : null,
     show_in_memorial: deceased,

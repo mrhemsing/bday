@@ -9,6 +9,7 @@ const samplePeople: Person[] = [
     birth_date: '1952-02-14',
     generation: 'other',
     order_number: null,
+    parent_id: null,
     notes: 'Family matriarch',
     deceased: false,
     deceased_at: null,
@@ -22,6 +23,7 @@ const samplePeople: Person[] = [
     birth_date: '1984-06-02',
     generation: 'other',
     order_number: null,
+    parent_id: null,
     notes: 'Loves hosting the summer cookout',
     deceased: false,
     deceased_at: null,
@@ -35,6 +37,7 @@ const samplePeople: Person[] = [
     birth_date: '2012-04-18',
     generation: 'child',
     order_number: null,
+    parent_id: null,
     notes: 'Prefers strawberry cake',
     deceased: false,
     deceased_at: null,
@@ -48,6 +51,7 @@ const samplePeople: Person[] = [
     birth_date: '2016-11-09',
     generation: 'grandchild',
     order_number: null,
+    parent_id: null,
     notes: null,
     deceased: false,
     deceased_at: null,
@@ -61,6 +65,7 @@ const samplePeople: Person[] = [
     birth_date: '2021-12-28',
     generation: 'great-grandchild',
     order_number: null,
+    parent_id: null,
     notes: 'Usually celebrates with pancakes',
     deceased: false,
     deceased_at: null,
@@ -75,6 +80,7 @@ export interface PersonInput {
   birth_date: string;
   generation: Generation;
   order_number?: number | null;
+  parent_id?: string | null;
   deceased?: boolean;
   deceased_at?: string | null;
   show_in_memorial?: boolean;
@@ -89,7 +95,7 @@ export async function getPeople(options?: { query?: string; generation?: Generat
   }
 
   const supabase = createSupabaseAdminClient();
-  let query = supabase.from('people').select('*').order('full_name', { ascending: true });
+  let query = supabase.from('people').select('*, parent:parent_id(id, full_name)').order('full_name', { ascending: true });
 
   if (options?.query) {
     query = query.ilike('full_name', `%${options.query}%`);
@@ -116,7 +122,7 @@ export async function getPersonById(id: string) {
   }
 
   const supabase = createSupabaseAdminClient();
-  const { data, error } = await supabase.from('people').select('*').eq('id', id).single();
+  const { data, error } = await supabase.from('people').select('*, parent:parent_id(id, full_name)').eq('id', id).single();
 
   if (error) {
     throw new Error(error.message);
@@ -136,6 +142,7 @@ export async function createPerson(input: PersonInput) {
     birth_date: input.birth_date,
     generation: input.generation,
     order_number: input.order_number ?? null,
+    parent_id: input.parent_id ?? null,
     deceased: input.deceased ?? false,
     deceased_at: input.deceased ? input.deceased_at ?? null : null,
     show_in_memorial: input.deceased ?? false,
@@ -156,6 +163,7 @@ export async function updatePerson(id: string, input: PersonInput) {
     birth_date: input.birth_date,
     generation: input.generation,
     order_number: input.order_number ?? null,
+    parent_id: input.parent_id ?? null,
     deceased: input.deceased ?? false,
     deceased_at: input.deceased ? input.deceased_at ?? null : null,
     show_in_memorial: input.deceased ?? false,
