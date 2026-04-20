@@ -96,7 +96,7 @@ export function HomeContent({
       onTouchEnd={handleTouchEnd}
       onTouchCancel={handleTouchCancel}
     >
-      <div className="mt-0 sm:mt-5">
+      <div className="mt-0 sm:mt-3">
         <div className="month-header-nudge text-left text-[2.125rem] font-semibold tracking-[-0.03em] text-slate-950 sm:hidden">
           {monthName} {year}
         </div>
